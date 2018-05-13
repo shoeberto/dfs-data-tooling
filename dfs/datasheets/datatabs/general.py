@@ -1,4 +1,7 @@
-class GeneralTab:
+from dfs.datasheets.datatabs.tabs import Tab
+
+
+class GeneralTab(Tab):
     study_area = None
     plot_number = None
     deer_impact = None
