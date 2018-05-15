@@ -120,15 +120,29 @@ class DatasheetParser2013(DatasheetParser):
         tab.study_area = worksheet['D3'].value
         tab.plot_number = worksheet['D4'].value
         tab.deer_impact = worksheet['D5'].value
-        tab.date = worksheet['D6'].value
+        tab.collection_date = worksheet['D6'].value
 
         for rownumber in range(16, 21):
             subplot = datatabs.general.PlotGeneralTabSubplot()
             subplot.micro_plot_id = worksheet['B{}'.format(rownumber)].value
             # Ignore slope
-            subplot.forested = worksheet['D{}'.format(rownumber)].value
+            forested_value = worksheet['D{}'.format(rownumber)].value
+
+            if 1 == forested_value:
+                subplot.forested = 'Yes'
+            elif 0 == forested_value:
+                subplot.forested = 'No'
+            else:
+                raise ValueError("Unexpected value for forested: '{}' in file {}".format(forested_value, workbook.input_filename))
 
             tab.subplots.append(subplot)
+
+        for rownumber in range(25, 33):
+            if worksheet['C{}'.format(rownumber)].value:
+                auxillary_post_location = datatabs.general.AuxillaryPostLocation()
+                auxillary_post_location.subplot = worksheet['C{}'.format(rownumber)].value
+                auxillary_post_location.azimuth = worksheet['D{}'.format(rownumber)].value
+                auxillary_post_location.distance = worksheet['E{}'.format(rownumber)].value
 
         return tab
 
