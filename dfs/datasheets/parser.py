@@ -23,7 +23,7 @@ class DatasheetParser:
         sheet = datasheet.Datasheet()
         sheet.input_filename = basename(filepath)
 
-        sheet.tabs[datasheet.TAB_NAME_GENERAL] = self.parse_general_tab(workbook)
+        sheet.tabs[datasheet.TAB_NAME_GENERAL] = self.parse_plot_general_tab(workbook)
         sheet.tabs[datasheet.TAB_NAME_WITNESS_TREES] = self.parse_witness_tree_tab(workbook)
         sheet.tabs[datasheet.TAB_NAME_NOTES] = self.parse_notes_tab(workbook)
         sheet.tabs[datasheet.TAB_NAME_TREE_TABLE] = self.parse_tree_table_tab(workbook)
@@ -43,7 +43,7 @@ class DatasheetParser:
 
 
     @abc.abstractmethod
-    def parse_general_tab(self, workbook):
+    def parse_plot_general_tab(self, workbook):
         """
         Parse out all data composing the "General" tab.
         
@@ -113,14 +113,18 @@ class DatasheetParser:
 
 
 class DatasheetParser2013(DatasheetParser):
-    def parse_general_tab(self, workbook):
+    def parse_plot_general_tab(self, workbook):
         worksheet = workbook[datasheet.TAB_NAME_GENERAL]
-        tab = datatabs.general.GeneralTab()
+        tab = datatabs.general.PlotGeneralTab()
 
         tab.study_area = worksheet['D3'].value
         tab.plot_number = worksheet['D4'].value
         tab.deer_impact = worksheet['D5'].value
         tab.collection_date = worksheet['D6'].value
+
+        # TODO not recorded in 2013?
+        # leaving blank for now
+        tab.fenced_subplot_condition = datatabs.general.FencedSubplotConditions()
 
         for rownumber in range(16, 21):
             subplot = datatabs.general.PlotGeneralTabSubplot()

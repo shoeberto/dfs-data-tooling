@@ -78,7 +78,7 @@ class DatasheetWriter:
             tab['H{}'.format(rownumber)] = subplot.altitude
             tab['I{}'.format(rownumber)] = '=LEFT((LEFT(A{0},2)+(RIGHT(A{0},LEN(A{0})-2)/60)),10)'.format(rownumber)
             tab['J{}'.format(rownumber)] = '=LEFT(-1*(LEFT(B{0},2)+(RIGHT(B{0},LEN(B{0})-2)/60)),10)'.format(rownumber)
-            tab['K{}'.format(rownumber)] = '=VALUE(CONCATENATE($General.$B$1,IF(LEN($General.$B$2)<2, CONCATENATE(0,$General.$B$2),$General.$B$2),IF(LEN(C{0})<2, CONCATENATE(0,C{0}),C{0}))'.format(rownumber)
+            tab['K{}'.format(rownumber)] = '=VALUE(CONCATENATE(General!$B$1,IF(LEN(General!$B$2)<2, CONCATENATE(0,General!$B$2),General!$B$2),IF(LEN(C{0})<2, CONCATENATE(0,C{0}),C{0}))'.format(rownumber)
 
             i += 1
 
@@ -110,6 +110,46 @@ class DatasheetWriter:
             tab['F{}'.format(rownumber)] = subplot.lime
             tab['G{}'.format(rownumber)] = subplot.herbicide
 
+            i += 1
+
+        tab['A23'] = 'Fenced Subplot Condition'
+        tab['C23'] = '0-3'
+
+        tab['A24'] = 'Active Exclosure'
+        tab['B24'] = 'Repair(s)'
+        tab['C24'] = 'Level'
+        tab['C24'] = 'Level'
+
+        tab['A25'] = sheet.tabs[datasheet.TAB_NAME_GENERAL].fenced_subplot_condition.active_exclosure
+        tab['B25'] = sheet.tabs[datasheet.TAB_NAME_GENERAL].fenced_subplot_condition.repairs
+        tab['C25'] = sheet.tabs[datasheet.TAB_NAME_GENERAL].fenced_subplot_condition.level
+
+        tab['A27'] = 'Auxillary Post Locations'
+        tab['A28'] = '1-5'
+        tab['B28'] = '1 or 2'
+        tab['C28'] = 'Wooden or Rebar'
+        tab['D28'] = '0-359'
+        tab['E28'] = 'Feet'
+
+        tab['A29'] = 'Sub/Micro'
+        tab['B29'] = 'Post'
+        tab['C29'] = 'Stake Type'
+        tab['D29'] = 'Azimuth'
+        tab['E29'] = 'Distance'
+
+        i = 0
+        for rownumber in range(30, 35):
+            if i < len(sheet.tabs[datasheet.TAB_NAME_GENERAL].auxillary_post_locations):
+                auxillary_post_location = sheet.tabs[datasheet.TAB_NAME_GENERAL].auxillary_post_location[i]
+
+                tab['A{}'.format(rownumber)] = auxillary_post_location.micro_plot_id
+                tab['B{}'.format(rownumber)] = auxillary_post_location.post
+                tab['C{}'.format(rownumber)] = auxillary_post_location.stake_type
+                tab['D{}'.format(rownumber)] = auxillary_post_location.azimuth
+                tab['E{}'.format(rownumber)] = auxillary_post_location.distance
+
+            i += 1
+
 
     def format_witness_trees_tab(self, sheet, tab):
         tab['A1'] = 'Witness Tree Table'
@@ -122,6 +162,7 @@ class DatasheetWriter:
         tab['F2'] = 'L or D'
         tab['G2'] = 'Azimuth'
         tab['H2'] = 'Distance'
+        tab['I2'] = 'UID'
 
         default_tree_number = 1
         i = 0
@@ -144,5 +185,6 @@ class DatasheetWriter:
                 tab['F{}'.format(rownumber)] = tree.live_or_dead
                 tab['G{}'.format(rownumber)] = tree.azimuth
                 tab['H{}'.format(rownumber)] = tree.distance
+                tab['I{}'.format(rownumber)] = '=VALUE(CONCATENATE(General!$B$1,IF(LEN(General!$B$2)<2, CONCATENATE(0,General!$B$2),General!$B$2),IF(LEN(B3)<2, CONCATENATE(0,B3),B3)))'
 
             i += 1
