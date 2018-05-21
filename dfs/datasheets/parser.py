@@ -2,12 +2,10 @@ from openpyxl import load_workbook
 from os.path import basename
 import dfs.datasheets.datatabs as datatabs
 import dfs.datasheets.datasheet as datasheet
-import abc
+from abc import ABC, abstractmethod
 
 
-class DatasheetParser:
-    __metaclass__ = abc.ABCMeta
-
+class DatasheetParser(ABC):
     def parse_datasheet(self, filepath):
         """
         Parse a datasheet file.
@@ -31,6 +29,13 @@ class DatasheetParser:
         sheet.tabs[datasheet.TAB_NAME_SAPLING] = self.parse_sapling_tab(workbook)
         sheet.tabs[datasheet.TAB_NAME_SEEDLING] = self.parse_seedling_tab(workbook)
 
+        for tab in sheet.tabs.values():
+            # TODO: remove this; only useful while some tabs are unimplemented
+            if None == tab:
+                continue
+
+            tab.validate()
+
         return sheet
 
     
@@ -42,7 +47,7 @@ class DatasheetParser:
                 raise Exception("Missing required worksheet '{}' in file '{}'".format(t, filePath))
 
 
-    @abc.abstractmethod
+    @abstractmethod
     def parse_plot_general_tab(self, workbook):
         """
         Parse out all data composing the "General" tab.
@@ -52,7 +57,7 @@ class DatasheetParser:
         """
 
 
-    @abc.abstractmethod
+    @abstractmethod
     def parse_witness_tree_tab(self, workbook):
         """
         Parse out all data composing the "Witness_Trees" tab.
@@ -62,7 +67,7 @@ class DatasheetParser:
         """
 
 
-    @abc.abstractmethod
+    @abstractmethod
     def parse_notes_tab(self, workbook):
         """
         Parse out all data composing the "Notes" tab.
@@ -72,7 +77,7 @@ class DatasheetParser:
         """
 
 
-    @abc.abstractmethod
+    @abstractmethod
     def parse_tree_table_tab(self, workbook):
         """
         Parse out all data composing the "Tree_Table" tab.
@@ -82,7 +87,7 @@ class DatasheetParser:
         """
 
 
-    @abc.abstractmethod
+    @abstractmethod
     def parse_cover_table_tab(self, workbook):
         """
         Parse out all data composing the "Cover_Table" tab.
@@ -92,7 +97,7 @@ class DatasheetParser:
         """
 
 
-    @abc.abstractmethod
+    @abstractmethod
     def parse_sapling_tab(self, workbook):
         """
         Parse out all data composing the "Sapling_(1-5)" tab.
@@ -102,7 +107,7 @@ class DatasheetParser:
         """
 
 
-    @abc.abstractmethod
+    @abstractmethod
     def parse_seedling_tab(self, workbook):
         """
         Parse out all data composing the "Seedling_(0-1)" tab.
@@ -173,3 +178,27 @@ class DatasheetParser2013(DatasheetParser):
 
         return tab
 
+
+    def parse_cover_table_tab(self, workbook):
+        # TODO: implement
+        return
+
+
+    def parse_notes_tab(self, workbook):
+        # TODO: implement
+        return
+
+
+    def parse_sapling_tab(self, workbook):
+        # TODO: implement
+        return
+
+
+    def parse_seedling_tab(self, workbook):
+        # TODO: implement
+        return
+
+
+    def parse_tree_table_tab(self, workbook):
+        # TODO: implement
+        return
