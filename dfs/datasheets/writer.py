@@ -24,6 +24,9 @@ class DatasheetWriter:
         witness_tree_tab = workbook.create_sheet(title=datasheet.TAB_NAME_WITNESS_TREES)
         self.format_witness_trees_tab(sheet, witness_tree_tab)
 
+        cover_table_tab = workbook.create_sheet(title=datasheet.TAB_NAME_COVER_TABLE)
+        self.format_cover_table_tab(sheet, cover_table_tab)
+
         workbook.save('{}/{}'.format(output_directory, sheet.input_filename))
 
 
@@ -186,5 +189,37 @@ class DatasheetWriter:
                 tab['G{}'.format(rownumber)] = tree.azimuth
                 tab['H{}'.format(rownumber)] = tree.distance
                 tab['I{}'.format(rownumber)] = '=VALUE(CONCATENATE(General!$B$1,IF(LEN(General!$B$2)<2, CONCATENATE(0,General!$B$2),General!$B$2),IF(LEN(B3)<2, CONCATENATE(0,B3),B3)))'
+
+            i += 1
+
+
+    def format_cover_table_tab(self, sheet, tab):
+        tab['A1'] = 'Cover Table'
+
+        tab['A2'] = 'Micro'
+        tab['B2'] = 'Quarter'
+        tab['C2'] = '300/1000'
+        tab['D2'] = 'Spp_K'
+        tab['E2'] = 'Spp_G'
+        tab['F2'] = 'PctCov'
+        tab['G2'] = 'AvgHt'
+        tab['H2'] = 'Count'
+        tab['I2'] = 'Flower'
+        tab['J2'] = 'Nstem'
+        tab['K2'] = 'UID'
+
+        i = 3
+        for cover_species in sheet.tabs[datasheet.TAB_NAME_COVER_TABLE].cover_species:
+            tab['A{}'.format(i)] = cover_species.micro_plot_id
+            tab['B{}'.format(i)] = cover_species.quarter
+            tab['C{}'.format(i)] = cover_species.scale
+            tab['D{}'.format(i)] = cover_species.species_known
+            tab['E{}'.format(i)] = cover_species.species_guess
+            tab['F{}'.format(i)] = cover_species.percent_cover
+            tab['G{}'.format(i)] = cover_species.average_height
+            tab['H{}'.format(i)] = cover_species.count
+            tab['I{}'.format(i)] = cover_species.flower
+            tab['J{}'.format(i)] = cover_species.number_of_stems
+            tab['K{}'.format(i)] = '=VALUE(CONCATENATE(General!$B$1,IF(LEN(General!$B$2)<2, CONCATENATE(0,General!$B$2),General!$B$2),IF(LEN(A{0})<2, CONCATENATE(0,A{0}),A{0})))'.format(i)
 
             i += 1

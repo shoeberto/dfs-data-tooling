@@ -2,6 +2,7 @@ from openpyxl import load_workbook
 from os.path import basename
 import dfs.datasheets.datatabs as datatabs
 import dfs.datasheets.datasheet as datasheet
+from dfs.datasheets.datatabs.tabs import FieldValidationException
 from abc import ABC, abstractmethod
 
 
@@ -142,7 +143,7 @@ class DatasheetParser2013(DatasheetParser):
             elif 0 == forested_value:
                 subplot.forested = 'No'
             else:
-                raise ValueError("Unexpected value for forested: '{}' in file {}".format(forested_value, workbook.input_filename))
+                raise FieldValidationException('PlotGeneralTab', 'forested', '0 or 1', forested_value)
 
             tab.subplots.append(subplot)
 
@@ -175,13 +176,44 @@ class DatasheetParser2013(DatasheetParser):
             tree.distance = worksheet['H{}'.format(rownumber)].value
 
             tab.witness_trees.append(tree)
-
+                        
         return tab
 
 
     def parse_cover_table_tab(self, workbook):
-        # TODO: implement
-        return
+        worksheet = workbook[datasheet.TAB_NAME_COVER_TABLE]
+        tab = datatabs.cover.CoverTableTab()
+
+        row_valid = True
+        i = 3
+
+        while (row_valid):
+            if not worksheet['A{}'.format(i)].value:
+                row_valid = False
+                continue
+
+            species = datatabs.cover.CoverSpecies()
+
+            species.micro_plot_id = worksheet['A{}'.format(i)].value
+            species.quarter = int(worksheet['B{}'.format(i)].value)
+            species.scale = int(worksheet['C{}'.format(i)].value)
+            species.species_known = worksheet['D{}'.format(i)].value
+            species.species_guess = worksheet['E{}'.format(i)].value
+            species.percent_cover = int(worksheet['F{}'.format(i)].value)
+            species.average_height = worksheet['G{}'.format(i)].value
+            species.count = worksheet['H{}'.format(i)].value
+            species.flower = worksheet['I{}'.format(i)].value
+            species.number_of_stems = worksheet['J{}'.format(i)].value
+
+            if species.count and not species.flower:
+                species.flower = 0
+
+            tab.cover_species.append(species)
+
+            i += 1
+
+        return tab
+
 
 
     def parse_notes_tab(self, workbook):

@@ -30,6 +30,10 @@ class Validatable(ABC):
             with open('data/master_species_list.csv', 'r') as f:
                 MASTER_SPECIES_LIST = [row['species_name'] for row in csv.DictReader(f)]
 
+        # TODO: where are these?
+        if species.lower().strip() in ['vacc', 'hupe']:
+            return
+
         if species.lower().strip() not in MASTER_SPECIES_LIST:
             raise SpeciesValidationException(self.__class__.__name__, species)
 
