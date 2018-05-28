@@ -3,30 +3,23 @@ from dfs.datasheets.datatabs.tabs import Validatable
 from dfs.datasheets.datatabs.tabs import FieldValidationException
 from dfs.datasheets.datatabs.tabs import FieldCountValidationException
 
-class CoverTableTab(Tab):
-    cover_species = []
+class SaplingTab(Tab):
+    sapling_species = []
 
 
     def validate(self):
-        for species in self.cover_species:
+        for species in self.sapling_species:
             species.validate()
 
 
-
-class CoverSpecies(Validatable):
-    DEER_INDICATOR_SPECIES = ['mara', 'maca', 'pobi', 'popu', 'trill', 'trer', 'trun', 'mevi']
-    HEIGHT_OPTIONAL_SPECIES = ['dewo', 'moss']
-
+class SaplingSpecies(Validatable):
     micro_plot_id = None
+    sapling_number = None
     quarter = None
     scale = None
     species_known = None
     species_guess = None
-    percent_cover = None
-    average_height = None
-    count = None
-    flower = None
-    number_of_stems = None
+    diameter_breast_height = None
 
 
     def validate(self):
@@ -53,18 +46,9 @@ class CoverSpecies(Validatable):
 
         species = (self.species_guess or self.species_known).lower()
 
-        if self.percent_cover not in range(0, 10):
-            raise FieldValidationException(self.__class__.__name__, 'percent cover', '0-9', self.percent_cover)
+        # TODO: this validation is getting flagged for 2013 due to 0-dbh species; why?
+        # if (1 > self.diameter_breast_height) or (5 < self.diameter_breast_height):
+        #     raise FieldValidationException(self.__class__.__name__, 'dbh', '>= 1 or <= 5', self.diameter_breast_height)
 
-        if species not in self.HEIGHT_OPTIONAL_SPECIES and self.average_height not in range(1, 6):
-            raise FieldValidationException(self.__class__.__name__, 'average height', '1-5', self.average_height)
-
-        if species in self.DEER_INDICATOR_SPECIES:
-            if None == self.count:
-                raise FieldValidationException(self.__class__.__name__, 'count of species {}'.format(self.species_guess or self.species_known), 'non-empty', self.count)
-
-            if None == self.flower:
-                raise FieldValidationException(self.__class__.__name__, 'count of flowering for species {}'.format(self.species_guess or self.species_known), 'non-empty', self.flower)
-
-
-        # TODO: flowering only required for trillium, but what species?
+        if not (self.diameter_breast_height * 10).is_integer():
+            raise FieldValidationException(self.__class__.__name__, 'dbh', '0.1 increments', self.diameter_breast_height)

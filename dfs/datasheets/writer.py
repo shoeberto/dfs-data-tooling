@@ -24,8 +24,19 @@ class DatasheetWriter:
         witness_tree_tab = workbook.create_sheet(title=datasheet.TAB_NAME_WITNESS_TREES)
         self.format_witness_trees_tab(sheet, witness_tree_tab)
 
+        tree_table_tab = workbook.create_sheet(title=datasheet.TAB_NAME_TREE_TABLE)
+        self.format_tree_table_tab(sheet, tree_table_tab)
+
         cover_table_tab = workbook.create_sheet(title=datasheet.TAB_NAME_COVER_TABLE)
         self.format_cover_table_tab(sheet, cover_table_tab)
+
+        sapling_tab = workbook.create_sheet(title=datasheet.TAB_NAME_SAPLING)
+        self.format_sapling_tab(sheet, sapling_tab)
+
+        seedling_tab = workbook.create_sheet(title=datasheet.TAB_NAME_SEEDLING)
+        self.format_seedling_tab(sheet, seedling_tab)
+
+
 
         workbook.save('{}/{}'.format(output_directory, sheet.input_filename))
 
@@ -221,5 +232,97 @@ class DatasheetWriter:
             tab['I{}'.format(i)] = cover_species.flower
             tab['J{}'.format(i)] = cover_species.number_of_stems
             tab['K{}'.format(i)] = '=VALUE(CONCATENATE(General!$B$1,IF(LEN(General!$B$2)<2, CONCATENATE(0,General!$B$2),General!$B$2),IF(LEN(A{0})<2, CONCATENATE(0,A{0}),A{0})))'.format(i)
+
+            i += 1
+
+
+    def format_sapling_tab(self, sheet, tab):
+        tab['A1'] = 'Sapling Table'
+
+        tab['A2'] = 'Micro'
+        tab['B2'] = 'Sapling No'
+        tab['C2'] = 'Quarter'
+        tab['D2'] = '300/1000'
+        tab['E2'] = 'Spp_K'
+        tab['F2'] = 'Spp_G'
+        tab['G2'] = 'dbh'
+        tab['H2'] = 'UID'
+
+        i = 3
+        for sapling_species in sheet.tabs[datasheet.TAB_NAME_SAPLING].sapling_species:
+            tab['A{}'.format(i)] = sapling_species.micro_plot_id
+            tab['B{}'.format(i)] = sapling_species.sapling_number
+            tab['C{}'.format(i)] = sapling_species.quarter
+            tab['D{}'.format(i)] = sapling_species.scale
+            tab['E{}'.format(i)] = sapling_species.species_known
+            tab['F{}'.format(i)] = sapling_species.species_guess
+            tab['G{}'.format(i)] = sapling_species.diameter_breast_height
+            tab['H{}'.format(i)] = '=VALUE(CONCATENATE(General!$B$1,IF(LEN(General!$B$2)<2, CONCATENATE(0,General!$B$2),General!$B$2),IF(LEN(A{0})<2, CONCATENATE(0,A{0}),A{0})))'.format(i)
+
+            i += 1
+
+
+    def format_seedling_tab(self, sheet, tab):
+        tab['A1'] = 'Seedling Table'
+
+        tab['A2'] = 'Micro'
+        tab['B2'] = 'Quarter'
+        tab['C2'] = '300/1000'
+        tab['D2'] = 'Spp_K'
+        tab['E2'] = 'Spp_G'
+        tab['F2'] = 'Sprout'
+        tab['G2'] = '0-6"'
+        tab['H2'] = '6-12"'
+        tab['I2'] = "1-3' Total"
+        tab['J2'] = "1-3' Browsed"
+        tab['K2'] = "3-5' Total"
+        tab['L2'] = "3-5' Browsed"
+        tab['M2'] = ">5' Total"
+        tab['N2'] = ">5' Browsed"
+        tab['O2'] = 'UID'
+
+        i = 3
+        for seedling_species in sheet.tabs[datasheet.TAB_NAME_SEEDLING].seedling_species:
+            tab['A{}'.format(i)] = seedling_species.micro_plot_id
+            tab['B{}'.format(i)] = seedling_species.quarter
+            tab['C{}'.format(i)] = seedling_species.scale
+            tab['D{}'.format(i)] = seedling_species.species_known
+            tab['E{}'.format(i)] = seedling_species.species_guess
+            tab['F{}'.format(i)] = seedling_species.sprout
+            tab['G{}'.format(i)] = seedling_species.zero_six_inches
+            tab['H{}'.format(i)] = seedling_species.six_twelve_inches
+            tab['I{}'.format(i)] = seedling_species.one_three_feet_total
+            tab['J{}'.format(i)] = seedling_species.one_three_feet_browsed
+            tab['K{}'.format(i)] = seedling_species.three_five_feet_total
+            tab['L{}'.format(i)] = seedling_species.three_five_feet_browsed
+            tab['M{}'.format(i)] = seedling_species.greater_five_feet_total
+            tab['N{}'.format(i)] = seedling_species.greater_five_feet_browsed
+            tab['O{}'.format(i)] = '=VALUE(CONCATENATE(General!$B$1,IF(LEN(General!$B$2)<2, CONCATENATE(0,General!$B$2),General!$B$2),IF(LEN(A{0})<2, CONCATENATE(0,A{0}),A{0})))'.format(i)
+
+            i += 1
+
+
+    def format_tree_table_tab(self, sheet, tab):
+        tab['A1'] = 'Tree Table'
+
+        tab['A2'] = 'Subplot'
+        tab['B2'] = 'Tree No'
+        tab['C2'] = 'Spp_K'
+        tab['D2'] = 'Spp_G'
+        tab['E2'] = 'dbh'
+        tab['F2'] = 'L or D'
+        tab['G2'] = 'Comments'
+        tab['H2'] = 'UID'
+
+        i = 3
+        for tree_species in sheet.tabs[datasheet.TAB_NAME_TREE_TABLE].tree_species:
+            tab['A{}'.format(i)] = tree_species.micro_plot_id
+            tab['B{}'.format(i)] = tree_species.tree_number
+            tab['C{}'.format(i)] = tree_species.species_known
+            tab['D{}'.format(i)] = tree_species.species_guess
+            tab['E{}'.format(i)] = tree_species.diameter_breast_height
+            tab['F{}'.format(i)] = tree_species.live_or_dead
+            tab['G{}'.format(i)] = tree_species.comments
+            tab['H{}'.format(i)] = '=VALUE(CONCATENATE(General!$B$1,IF(LEN(General!$B$2)<2, CONCATENATE(0,General!$B$2),General!$B$2),IF(LEN(A{0})<2, CONCATENATE(0,A{0}),A{0})))'.format(i)
 
             i += 1

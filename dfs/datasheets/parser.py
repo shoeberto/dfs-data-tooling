@@ -222,15 +222,123 @@ class DatasheetParser2013(DatasheetParser):
 
 
     def parse_sapling_tab(self, workbook):
-        # TODO: implement
-        return
+        worksheet = workbook[datasheet.TAB_NAME_COVER_TABLE]
+        tab = datatabs.sapling.SaplingTab()
+
+        row_valid = True
+        i = 3
+
+        subplot_sapling_numbers = {}
+
+        while (row_valid):
+            if not worksheet['A{}'.format(i)].value:
+                row_valid = False
+                continue
+
+            species = datatabs.sapling.SaplingSpecies()
+
+            species.micro_plot_id = worksheet['A{}'.format(i)].value
+
+            if species.micro_plot_id not in subplot_sapling_numbers:
+                subplot_sapling_numbers[species.micro_plot_id] = 1
+            else:
+                subplot_sapling_numbers[species.micro_plot_id] += 1
+
+            species.sapling_number = subplot_sapling_numbers[species.micro_plot_id]
+            species.quarter = int(worksheet['B{}'.format(i)].value)
+            species.scale = int(worksheet['C{}'.format(i)].value)
+            species.species_known = worksheet['D{}'.format(i)].value
+            species.species_guess = worksheet['E{}'.format(i)].value
+            species.diameter_breast_height = float(worksheet['F{}'.format(i)].value)
+
+            tab.sapling_species.append(species)
+
+            i += 1
+
+        return tab
 
 
     def parse_seedling_tab(self, workbook):
-        # TODO: implement
-        return
+        worksheet = workbook[datasheet.TAB_NAME_SEEDLING]
+        tab = datatabs.seedling.SeedlingTable()
+
+        row_valid = True
+        i = 3
+
+        while (row_valid):
+            if not worksheet['A{}'.format(i)].value:
+                row_valid = False
+                continue
+
+            species = datatabs.seedling.SeedlingSpecies()
+
+            species.micro_plot_id = worksheet['A{}'.format(i)].value
+
+            species.quarter = int(worksheet['B{}'.format(i)].value)
+            species.scale = int(worksheet['C{}'.format(i)].value)
+            species.species_known = worksheet['D{}'.format(i)].value
+            species.species_guess = worksheet['E{}'.format(i)].value
+            species.sprout = 0
+            species.zero_six_inches = worksheet['F{}'.format(i)].value
+            species.six_twelve_inches = worksheet['G{}'.format(i)].value
+            species.one_three_feet_total = worksheet['H{}'.format(i)].value
+            species.one_three_feet_browsed = worksheet['I{}'.format(i)].value
+
+            if species.one_three_feet_total and not species.one_three_feet_browsed:
+                species.one_three_feet_browsed = 0
+
+            species.three_five_feet_total = worksheet['J{}'.format(i)].value
+            species.three_five_feet_browsed = worksheet['K{}'.format(i)].value
+
+            if species.three_five_feet_total and not species.three_five_feet_browsed:
+                species.three_five_feet_browsed = 0
+
+            species.greater_five_feet_total = worksheet['L{}'.format(i)].value
+            species.greater_five_feet_browsed = worksheet['M{}'.format(i)].value
+
+            if species.greater_five_feet_total and not species.greater_five_feet_browsed:
+                species.greater_five_feet_browsed = 0
+
+            tab.seedling_species.append(species)
+
+            i += 1
+
+        return tab
 
 
     def parse_tree_table_tab(self, workbook):
-        # TODO: implement
-        return
+        worksheet = workbook[datasheet.TAB_NAME_TREE_TABLE]
+        tab = datatabs.tree.TreeTableTab()
+
+        row_valid = True
+        i = 3
+
+        subplot_tree_numbers = {}
+
+        while (row_valid):
+            if not worksheet['A{}'.format(i)].value:
+                row_valid = False
+                continue
+
+            species = datatabs.tree.TreeTableSpecies()
+
+            species.micro_plot_id = worksheet['A{}'.format(i)].value
+
+            if species.micro_plot_id not in subplot_tree_numbers:
+                subplot_tree_numbers[species.micro_plot_id] = 1
+            else:
+                subplot_tree_numbers[species.micro_plot_id] += 1
+
+            species.tree_number = subplot_tree_numbers[species.micro_plot_id]
+            species.species_known = worksheet['C{}'.format(i)].value
+            species.species_guess = worksheet['D{}'.format(i)].value
+            species.diameter_breast_height = float(worksheet['E{}'.format(i)].value)
+            species.live_or_dead = worksheet['F{}'.format(i)].value
+            species.comments = ''
+
+            tab.tree_species.append(species)
+
+            i += 1
+
+        return tab
+
