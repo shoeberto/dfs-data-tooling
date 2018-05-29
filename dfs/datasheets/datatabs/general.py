@@ -21,9 +21,8 @@ class GeneralTab(Tab):
         if self.plot_number not in range(1, 51):
             raise FieldValidationException(self.__class__.__name__, 'plot number', '1-50', self.plot_number)
 
-        # TODO: what's a valid value here?
-        # if self.deer_impact not in []:
-        #     raise FieldValidationException(self.__class__.__name__, 'deer impact', 'TODO', self.deer_impact)
+        if self.deer_impact not in range(1, 6):
+            raise FieldValidationException(self.__class__.__name__, 'deer impact', '1-5', self.deer_impact)
 
         if None == self.collection_date:
             raise FieldValidationException(self.__class__.__name__, 'collection date', 'a date', 'None')

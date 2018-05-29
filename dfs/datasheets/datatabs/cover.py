@@ -15,7 +15,8 @@ class CoverTableTab(Tab):
 
 class CoverSpecies(Validatable):
     DEER_INDICATOR_SPECIES = ['mara', 'maca', 'pobi', 'popu', 'trill', 'trer', 'trun', 'mevi']
-    HEIGHT_OPTIONAL_SPECIES = ['dewo', 'moss']
+    TRILLIUM_SPECIES = ['trer', 'trun', 'trill']
+    HEIGHT_OPTIONAL_SPECIES = ['dewo', 'moss', 'bliv', 'bodt', 'rock', 'root', 'road', 'trash', 'water']
 
     micro_plot_id = None
     quarter = None
@@ -30,6 +31,9 @@ class CoverSpecies(Validatable):
 
 
     def validate(self):
+        self.species_known = self.override_species(self.species_known)
+        self.species_guess = self.override_species(self.species_guess)
+
         if self.micro_plot_id not in range(1, 6):
             raise FieldValidationException(self.__class__.__name__, 'microplot ID', '1-5', self.micro_plot_id)
 
@@ -66,5 +70,8 @@ class CoverSpecies(Validatable):
             if None == self.flower:
                 raise FieldValidationException(self.__class__.__name__, 'count of flowering for species {}'.format(self.species_guess or self.species_known), 'non-empty', self.flower)
 
+        if species not in self.TRILLIUM_SPECIES and None != self.number_of_stems:
+            raise FieldValidationException(self.__class__.__name__, 'nstem', 'empty for non-trillium species', self.number_of_stems)
 
-        # TODO: flowering only required for trillium, but what species?
+        if species in self.TRILLIUM_SPECIES and None == self.number_of_stems:
+            self.number_of_stems = 0

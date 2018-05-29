@@ -39,6 +39,9 @@ class WitnessTreeTabTree(Validatable):
 
 
     def validate(self):
+        self.species_known = self.override_species(self.species_known)
+        self.species_guess = self.override_species(self.species_guess)
+
         if int(self.tree_number) not in range(1, 4):
             raise FieldValidationException(self.__class__.__name__, 'tree number', '1-3', self.tree_number)
 

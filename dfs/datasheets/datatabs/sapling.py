@@ -23,6 +23,9 @@ class SaplingSpecies(Validatable):
 
 
     def validate(self):
+        self.species_known = self.override_species(self.species_known)
+        self.species_guess = self.override_species(self.species_guess)
+
         if self.micro_plot_id not in range(1, 6):
             raise FieldValidationException(self.__class__.__name__, 'microplot ID', '1-5', self.micro_plot_id)
 
@@ -46,9 +49,8 @@ class SaplingSpecies(Validatable):
 
         species = (self.species_guess or self.species_known).lower()
 
-        # TODO: this validation is getting flagged for 2013 due to 0-dbh species; why?
-        # if (1 > self.diameter_breast_height) or (5 < self.diameter_breast_height):
-        #     raise FieldValidationException(self.__class__.__name__, 'dbh', '>= 1 or <= 5', self.diameter_breast_height)
+        if (1 > self.diameter_breast_height) or (5 <= self.diameter_breast_height):
+            raise FieldValidationException(self.__class__.__name__, 'dbh', '>= 1 or < 5', self.diameter_breast_height)
 
         if not (self.diameter_breast_height * 10).is_integer():
             raise FieldValidationException(self.__class__.__name__, 'dbh', '0.1 increments', self.diameter_breast_height)

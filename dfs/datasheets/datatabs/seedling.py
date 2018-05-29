@@ -30,6 +30,9 @@ class SeedlingSpecies(Validatable):
 
 
     def validate(self):
+        self.species_guess = self.override_species(self.species_guess)
+        self.species_known = self.override_species(self.species_known)
+
         if self.micro_plot_id not in range(1, 6):
             raise FieldValidationException(self.__class__.__name__, 'microplot ID', '1-5', self.micro_plot_id)
 

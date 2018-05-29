@@ -22,6 +22,27 @@ class Validatable(ABC):
         if 1 < len(set(field_none_values.values())):
             raise RequiredFieldMismatchValidationException(self.__class__.__name__)
 
+
+    def override_species(self, species):
+        if None == species:
+            return species
+
+        species = species.lower().strip()
+
+        if 'vapa' == species:
+            return 'vasp'
+        
+        if 'rual' == species:
+            return 'rusp'
+
+        if 'vacc' == species:
+            return 'vasp'
+
+        if 'hupe' == species:
+            return 'husp'
+
+        return species
+
     
     def validate_species(self, species):
         global MASTER_SPECIES_LIST
@@ -29,10 +50,6 @@ class Validatable(ABC):
         if None == MASTER_SPECIES_LIST:
             with open('data/master_species_list.csv', 'r') as f:
                 MASTER_SPECIES_LIST = [row['species_name'] for row in csv.DictReader(f)]
-
-        # TODO: where are these?
-        if species.lower().strip() in ['vacc', 'hupe']:
-            return
 
         if species.lower().strip() not in MASTER_SPECIES_LIST:
             raise SpeciesValidationException(self.__class__.__name__, species)

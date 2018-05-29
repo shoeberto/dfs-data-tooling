@@ -128,8 +128,7 @@ class DatasheetParser2013(DatasheetParser):
         tab.deer_impact = worksheet['D5'].value
         tab.collection_date = worksheet['D6'].value
 
-        # TODO not recorded in 2013?
-        # leaving blank for now
+        # not recorded for 2013
         tab.fenced_subplot_condition = datatabs.general.FencedSubplotConditions()
 
         for rownumber in range(16, 21):
@@ -222,7 +221,7 @@ class DatasheetParser2013(DatasheetParser):
 
 
     def parse_sapling_tab(self, workbook):
-        worksheet = workbook[datasheet.TAB_NAME_COVER_TABLE]
+        worksheet = workbook[datasheet.TAB_NAME_SAPLING]
         tab = datatabs.sapling.SaplingTab()
 
         row_valid = True
