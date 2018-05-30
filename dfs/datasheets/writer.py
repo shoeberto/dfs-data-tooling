@@ -24,6 +24,9 @@ class DatasheetWriter:
         witness_tree_tab = workbook.create_sheet(title=datasheet.TAB_NAME_WITNESS_TREES)
         self.format_witness_trees_tab(sheet, witness_tree_tab)
 
+        notes_tab = workbook.create_sheet(title=datasheet.TAB_NAME_NOTES)
+        self.format_notes_tab(sheet, notes_tab)
+
         tree_table_tab = workbook.create_sheet(title=datasheet.TAB_NAME_TREE_TABLE)
         self.format_tree_table_tab(sheet, tree_table_tab)
 
@@ -35,8 +38,6 @@ class DatasheetWriter:
 
         seedling_tab = workbook.create_sheet(title=datasheet.TAB_NAME_SEEDLING)
         self.format_seedling_tab(sheet, seedling_tab)
-
-
 
         workbook.save('{}/{}'.format(output_directory, sheet.input_filename))
 
@@ -53,6 +54,7 @@ class DatasheetWriter:
 
         tab['A4'] = 'Date'
         tab['B4'] = sheet.tabs[datasheet.TAB_NAME_GENERAL].collection_date
+        tab['B4'].number_format = 'M/D/YYYY'
 
         tab['A6'] = 'Coordinate Converter'
 
@@ -163,6 +165,42 @@ class DatasheetWriter:
                 tab['E{}'.format(rownumber)] = auxillary_post_location.distance
 
             i += 1
+
+
+    def format_notes_tab(self, sheet, tab):
+        tab['A1'] = 'Study Area'
+        tab['B1'] = '=General!B1'
+
+        tab['A2'] = 'Plot Number'
+        tab['B2'] = '=General!B2'
+
+        tab['A3'] = 'Deer Impact'
+        tab['B3'] = '=General!B3'
+
+        tab['A4'] = 'Date'
+        tab['B4'] = '=General!B4'
+        tab['B4'].number_format = 'M/D/YYYY'
+
+        tab['A6'] = 'Deer Impact Logic'
+        tab['A7'] = "(Please enter all notes into 'D' cells, no length constraint)"
+        
+        tab['A8'] = 'Seedlings'
+        tab['B8'] = sheet.tabs[datasheet.TAB_NAME_NOTES].seedlings
+        tab['C8'] = 'Notes:'
+        tab['D8'] = sheet.tabs[datasheet.TAB_NAME_NOTES].seedlings_notes
+
+        tab['A11'] = 'Browsing'
+        tab['B11'] = sheet.tabs[datasheet.TAB_NAME_NOTES].browsing
+        tab['C11'] = 'Notes:'
+        tab['D11'] = sheet.tabs[datasheet.TAB_NAME_NOTES].browsing_notes
+
+        tab['A14'] = 'Indicators'
+        tab['B14'] = sheet.tabs[datasheet.TAB_NAME_NOTES].indicators
+        tab['C14'] = 'Notes:'
+        tab['D14'] = sheet.tabs[datasheet.TAB_NAME_NOTES].indicators_notes
+
+        tab['A18'] = 'Notes:'
+        tab['A19'] = sheet.tabs[datasheet.TAB_NAME_NOTES].general_notes
 
 
     def format_witness_trees_tab(self, sheet, tab):

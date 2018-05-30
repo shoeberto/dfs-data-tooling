@@ -4,3 +4,4 @@ import dfs.datasheets.datatabs.cover
 import dfs.datasheets.datatabs.sapling
 import dfs.datasheets.datatabs.tree
 import dfs.datasheets.datatabs.seedling
+import dfs.datasheets.datatabs.notes

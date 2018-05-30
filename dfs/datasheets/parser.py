@@ -216,8 +216,27 @@ class DatasheetParser2013(DatasheetParser):
 
 
     def parse_notes_tab(self, workbook):
-        # TODO: implement
-        return
+        worksheet = workbook[datasheet.TAB_NAME_NOTES]
+        tab = datatabs.notes.NotesTab()
+
+        tab.seedlings = worksheet['D11'].value
+        tab.seedlings_notes = worksheet['F11'].value
+
+        tab.browsing = worksheet['D14'].value
+        tab.browsing_notes = worksheet['F14'].value
+
+        tab.indicators = worksheet['D17'].value
+        tab.indicators_notes = worksheet['F17'].value
+
+        notes_rows = []
+        for row in worksheet['C22:M42']:
+            for cell in row:
+                if None != cell.value:
+                    notes_rows.append(cell.value)
+
+        tab.general_notes = ' '.join(notes_rows).strip()
+
+        return tab
 
 
     def parse_sapling_tab(self, workbook):
