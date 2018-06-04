@@ -2,7 +2,7 @@ from openpyxl import load_workbook
 from os.path import basename
 import dfs.datasheets.datatabs as datatabs
 import dfs.datasheets.datasheet as datasheet
-from dfs.datasheets.datatabs.tabs import FieldValidationException
+from dfs.datasheets.datatabs.tabs import FieldValidationError
 from abc import ABC, abstractmethod
 
 
@@ -30,12 +30,12 @@ class DatasheetParser(ABC):
         sheet.tabs[datasheet.TAB_NAME_SAPLING] = self.parse_sapling_tab(workbook)
         sheet.tabs[datasheet.TAB_NAME_SEEDLING] = self.parse_seedling_tab(workbook)
 
+        file_validation_errors = []
         for tab in sheet.tabs.values():
-            # TODO: remove this; only useful while some tabs are unimplemented
-            if None == tab:
-                continue
+            file_validation_errors += tab.validate()
 
-            tab.validate()
+        print("Validation errors in file '{}':".format(filepath))
+        print('\n'.join([x.get_message() for x in file_validation_errors]) + '\n')
 
         return sheet
 
@@ -142,7 +142,9 @@ class DatasheetParser2013(DatasheetParser):
             elif 0 == forested_value:
                 subplot.forested = 'No'
             else:
-                raise FieldValidationException('PlotGeneralTab', 'forested', '0 or 1', forested_value)
+                pass
+                # TODO convert to error
+                # raise FieldValidationException('PlotGeneralTab', 'forested', '0 or 1', forested_value)
 
             tab.subplots.append(subplot)
 

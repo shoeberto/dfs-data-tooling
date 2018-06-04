@@ -8,6 +8,7 @@ class Validatable(ABC):
     YES_NO_RESPONSE = ['Yes', 'No']
     YES_NO_TEXT = 'yes or no'
 
+
     @abstractmethod
     def validate(self):
         pass
@@ -20,7 +21,9 @@ class Validatable(ABC):
             field_none_values[field] = (None == getattr(self, field))
 
         if 1 < len(set(field_none_values.values())):
-            raise RequiredFieldMismatchValidationException(self.__class__.__name__)
+            return [RequiredFieldMismatchValidationError()]
+
+        return []
 
 
     def override_species(self, species):
@@ -52,34 +55,63 @@ class Validatable(ABC):
                 MASTER_SPECIES_LIST = [row['species_name'] for row in csv.DictReader(f)]
 
         if species.lower().strip() not in MASTER_SPECIES_LIST:
-            raise SpeciesValidationException(self.__class__.__name__, species)
+            return [SpeciesValidationError(self.__class__.__name__, species)]
+
+        return []
 
 
 class Tab(Validatable):
     def __init__(self):
-        return
+        pass
 
 
-class ValidationException(Exception):
-    def __init__(self, message):
-        super().__init__(message)
+class ValidationError:
+    def __init__(self):
+        pass
 
 
-class FieldValidationException(ValidationException):
+    def get_message(self):
+        return ''
+
+
+class FieldValidationError(ValidationError):
     def __init__(self, object_type, field, expected, actual):
-        super().__init__("In {}: Expected value of field '{}' is '{}', got '{}'".format(object_type, field, expected, actual))
+        self.object_type = object_type
+        self.field = field
+        self.expected = expected
+        self.actual = actual
 
 
-class FieldCountValidationException(ValidationException):
+    def get_message(self):
+        return "In {}: Expected value of field '{}' is '{}', got '{}'".format(self.object_type, self.field, self.expected, self.actual)
+
+
+class FieldCountValidationError(ValidationError):
     def __init__(self, object_type, field, expected, actual):
-        super().__init__("In {}: Expected count of field '{}' to be {}, instead counted {}".format(object_type, field, expected, actual))
+        self.object_type = object_type
+        self.field = field
+        self.expected = expected
+        self.actual = actual
 
 
-class RequiredFieldMismatchValidationException(ValidationException):
+    def get_message(self):
+        return "In {}: Expected count of field '{}' to be {}, instead counted {}".format(self.object_type, self.field, self.expected, self.actual)
+
+
+class RequiredFieldMismatchValidationError(ValidationError):
     def __init__(self, object_type):
-        super().__init__('In {}: mixture of empty and non-empty fields, where values are expected'.format(object_type))
+        self.object_type = object_type
 
 
-class SpeciesValidationException(ValidationException):
+    def get_message(self):
+        return 'In {}: mixture of empty and non-empty fields, where values are expected'.format(self.object_type)
+
+
+class SpeciesValidationError(ValidationError):
     def __init__(self, object_type, species):
-        super().__init__("In {}: '{}' is not a valid species".format(object_type, species))
+        self.object_type = object_type
+        self.species = species
+
+
+    def get_message(self):
+        return "In {}: '{}' is not a valid species".format(self.object_type, self.species)
