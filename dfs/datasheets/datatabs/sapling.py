@@ -46,11 +46,8 @@ class SaplingSpecies(Validatable):
         if self.scale not in [300, 1000]:
             validation_errors.append(FieldValidationError(self.__class__.__name__, 'scale', '300 or 1000', self.scale))
 
-        if None != self.species_known and None != self.species_guess:
-            validation_errors.append(FieldValidationError(self.__class__.__name__, 'species known/species guess', 'one empty, one non-empty', ''))
-
-        if None == self.species_known and None == self.species_guess:
-            validation_errors.append(FieldValidationError(self.__class__.__name__, 'species known/species guess', 'one empty, one non-empty', ''))
+        if None == self.species_known:
+            validation_errors.append(FieldValidationError(self.__class__.__name__, 'species known', 'non-empty', self.species_known))
 
         if None != self.species_known:
             validation_errors += self.validate_species(self.species_known)
@@ -58,12 +55,13 @@ class SaplingSpecies(Validatable):
         if None != self.species_guess:
             validation_errors += self.validate_species(self.species_guess)
 
-        species = (self.species_guess or self.species_known).lower()
+        if None == self.diameter_breast_height:
+            validation_errors.append(FieldValidationError(self.__class__.__name__, 'dbh', 'non-empty', self.diameter_breast_height))
+        else:
+            if (1 > self.diameter_breast_height) or (5 <= self.diameter_breast_height):
+                validation_errors.append(FieldValidationError(self.__class__.__name__, 'dbh', '>= 1 or < 5', self.diameter_breast_height))
 
-        if (1 > self.diameter_breast_height) or (5 <= self.diameter_breast_height):
-            validation_errors.append(FieldValidationError(self.__class__.__name__, 'dbh', '>= 1 or < 5', self.diameter_breast_height))
-
-        if not (self.diameter_breast_height * 10).is_integer():
-            validation_errors.append(FieldValidationError(self.__class__.__name__, 'dbh', '0.1 increments', self.diameter_breast_height))
+            if not (self.diameter_breast_height * 10).is_integer():
+                validation_errors.append(FieldValidationError(self.__class__.__name__, 'dbh', '0.1 increments', self.diameter_breast_height))
 
         return validation_errors

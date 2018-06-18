@@ -7,6 +7,43 @@ MASTER_SPECIES_LIST = None
 class Validatable(ABC):
     YES_NO_RESPONSE = ['Yes', 'No']
     YES_NO_TEXT = 'yes or no'
+    SPECIES_OVERRIDES = {
+        'acps': 'acpe',
+        'acri': 'acru',
+        'amar': 'amsp',
+        'amel': 'amsp',
+        'asca': 'acsa',
+        'assp': 'aster',
+        'beap': 'beal',
+        'biv': 'bliv',
+        'bolt': 'bliv',
+        'caal': 'cato',
+        'cape': 'caco',
+        'euru': 'agal',
+        'gass': 'grass',
+        'gras': 'grass',
+        'lsyp': 'lysp',
+        'lysp2': 'lysp1',
+        'muvi': 'mevi',
+        'newi': 'thno',
+        'osci': 'osvi',
+        'posp': 'poten',
+        'potr': 'potr5',
+        'ptsp': 'ptaq',
+        'sedg': 'sedge',
+        'star': 'trbo',
+        'sumac': 'rhus',
+        'tica': 'tico',
+        'toaf': 'taof',
+        'trvo': 'trbo',
+        'unk1': 'unka',
+        'unk2': 'unkb',
+        'vaac': 'vasp',
+        'vapa': 'vasp',
+        'rual': 'rusp',
+        'vacc': 'vasp',
+        'hupe': 'husp'
+    }
 
 
     @abstractmethod
@@ -32,17 +69,8 @@ class Validatable(ABC):
 
         species = species.lower().strip()
 
-        if 'vapa' == species:
-            return 'vasp'
-        
-        if 'rual' == species:
-            return 'rusp'
-
-        if 'vacc' == species:
-            return 'vasp'
-
-        if 'hupe' == species:
-            return 'husp'
+        if species in self.SPECIES_OVERRIDES:
+            return self.SPECIES_OVERRIDES[species]
 
         return species
 

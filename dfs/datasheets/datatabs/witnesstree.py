@@ -60,11 +60,8 @@ class WitnessTreeTabTree(Validatable):
         if int(self.micro_plot_id) not in range(1, 6):
             validation_errors.append(FieldValidationError(self.__class__.__name__, 'micro plot ID', '1-5', self.micro_plot_id))
 
-        if None != self.species_known and None != self.species_guess:
-            validation_errors.append(FieldValidationError(self.__class__.__name__, 'species known/species guess', 'one empty, one non-empty', ''))
-
-        if None == self.species_known and None == self.species_guess:
-            validation_errors.append(FieldValidationError(self.__class__.__name__, 'species known/species guess', 'one empty, one non-empty', ''))
+        if None == self.species_known:
+            validation_errors.append(FieldValidationError(self.__class__.__name__, 'species known', 'non-empty', self.species_known))
 
         if None != self.species_known:
             validation_errors += self.validate_species(self.species_known)
@@ -72,13 +69,13 @@ class WitnessTreeTabTree(Validatable):
         if None != self.species_guess:
             validation_errors += self.validate_species(self.species_guess)
 
-        if self.dbh < 5:
+        if None == self.dbh or self.dbh < 5:
             validation_errors.append(FieldValidationError(self.__class__.__name__, 'DBH', '> 5', self.dbh))
 
-        if self.live_or_dead not in ['L', 'D']:
+        if None == self.live_or_dead or self.live_or_dead not in ['L', 'D']:
             validation_errors.append(FieldValidationError(self.__class__.__name__, 'live or dead', 'L or D', self.live_or_dead))
 
-        if self.azimuth < 0 or self.azimuth > 359:
+        if None == self.azimuth or self.azimuth < 0 or self.azimuth > 359:
             validation_errors.append(FieldValidationError(self.__class__.__name__, 'azimuth', '0-359', self.azimuth))
 
         if None == self.distance or self.distance < 0:

@@ -87,6 +87,13 @@ class DatasheetWriter:
             tab['A{}'.format(rownumber)] = subplot.latitude
             tab['B{}'.format(rownumber)] = subplot.longitude
             tab['C{}'.format(rownumber)] = str(subplot.micro_plot_id)
+
+            if None == subplot.collected:
+                if subplot.micro_plot_id in sheet.tabs.[datasheet.TAB_NAME_COVER_TABLE].get_recorded_subplots():
+                    subplot.collected = 'Yes'
+                else:
+                    subplot.collected = 'No'
+
             tab['D{}'.format(rownumber)] = subplot.collected
             tab['E{}'.format(rownumber)] = subplot.fenced
             tab['F{}'.format(rownumber)] = subplot.azimuth

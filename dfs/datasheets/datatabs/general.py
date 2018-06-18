@@ -20,8 +20,8 @@ class GeneralTab(Tab):
     def validate(self):
         validation_errors = []
 
-        if self.study_area not in [1, 2]:
-            validation_errors.append(FieldValidationError(self.__class__.__name__, 'study area', '1 or 2', self.study_area))
+        if self.study_area not in range(1, 5):
+            validation_errors.append(FieldValidationError(self.__class__.__name__, 'study area', '1-4', self.study_area))
 
         if self.plot_number not in range(1, 51):
             validation_errors.append(FieldValidationError(self.__class__.__name__, 'plot number', '1-50', self.plot_number))

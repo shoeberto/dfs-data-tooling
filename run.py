@@ -8,9 +8,14 @@ def run(data_year, input_directory, output_directory):
     p = parser.DatasheetParser2013()
     w = writer.DatasheetWriter()
 
-    for filename in glob.glob('{}/*.xlsx'.format(input_directory)):
-        datasheet = p.parse_datasheet(filename)
-        w.write(datasheet, output_directory)
+    for filename in sorted(glob.glob('{}/*.xlsx'.format(input_directory))):
+        print("Processing file '{}':".format(filename))
+
+        try:
+            datasheet = p.parse_datasheet(filename)
+            w.write(datasheet, output_directory)
+        except Exception as e:
+            print('Fatal error encountered: {}'.format(str(e)))
 
 
 if 4 < len(sys.argv):

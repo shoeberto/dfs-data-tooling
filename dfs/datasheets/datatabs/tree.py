@@ -41,11 +41,8 @@ class TreeTableSpecies(Validatable):
         if self.micro_plot_id not in range(1, 6):
             validation_errors.append(FieldValidationError(self.__class__.__name__, 'microplot ID', '1-5', self.micro_plot_id))
 
-        if None != self.species_known and None != self.species_guess:
-            validation_errors.append(FieldValidationError(self.__class__.__name__, 'species known/species guess', 'one empty, one non-empty', ''))
-
-        if None == self.species_known and None == self.species_guess:
-            validation_errors.append(FieldValidationError(self.__class__.__name__, 'species known/species guess', 'one empty, one non-empty', ''))
+        if None == self.species_known:
+            validation_errors.append(FieldValidationError(self.__class__.__name__, 'species known', 'non-empty', self.species_known))
 
         if None != self.species_known:
             validation_errors += self.validate_species(self.species_known)
@@ -53,13 +50,14 @@ class TreeTableSpecies(Validatable):
         if None != self.species_guess:
             validation_errors += self.validate_species(self.species_guess)
 
-        species = (self.species_guess or self.species_known).lower()
+        if None == self.diameter_breast_height:
+            validation_errors.append(FieldValidationError(self.__class__.__name__, 'dbh', 'non-empty', self.diameter_breast_height))
+        else: 
+            if 5 > self.diameter_breast_height:
+                validation_errors.append(FieldValidationError(self.__class__.__name__, 'dbh', '> 5', self.diameter_breast_height))
 
-        if 5 > self.diameter_breast_height:
-            validation_errors.append(FieldValidationError(self.__class__.__name__, 'dbh', '> 5', self.diameter_breast_height))
-
-        if not (self.diameter_breast_height * 10).is_integer():
-            validation_errors.append(FieldValidationError(self.__class__.__name__, 'dbh', '0.1 increments', self.diameter_breast_height))
+            if not (self.diameter_breast_height * 10).is_integer():
+                validation_errors.append(FieldValidationError(self.__class__.__name__, 'dbh', '0.1 increments', self.diameter_breast_height))
 
         if self.live_or_dead not in ['L', 'D']:
             validation_errors.append(FieldValidationError(self.__class__.__name__, 'L or D', 'L or D', self.live_or_dead))

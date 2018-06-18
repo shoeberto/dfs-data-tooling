@@ -54,19 +54,14 @@ class SeedlingSpecies(Validatable):
         if self.scale not in [300, 1000]:
             validation_errors.append(FieldValidationError(self.__class__.__name__, 'scale', '300 or 1000', self.scale))
 
-        if None != self.species_known and None != self.species_guess:
-            validation_errors.append(FieldValidationError(self.__class__.__name__, 'species known/species guess', 'one empty, one non-empty', ''))
-
-        if None == self.species_known and None == self.species_guess:
-            validation_errors.append(FieldValidationError(self.__class__.__name__, 'species known/species guess', 'one empty, one non-empty', ''))
+        if None == self.species_known:
+            validation_errors.append(FieldValidationError(self.__class__.__name__, 'species known', 'non-empty', self.species_known))
 
         if None != self.species_known:
             validation_errors += self.validate_species(self.species_known)
 
         if None != self.species_guess:
             validation_errors += self.validate_species(self.species_guess)
-
-        species = (self.species_guess or self.species_known).lower()
 
         if self.sprout not in [0, 1]:
             validation_errors.append(FieldValidationError(self.__class__.__name__, 'sprout', '0 or 1', self.sprout))
