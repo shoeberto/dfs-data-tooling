@@ -1,24 +1,41 @@
 import sys
 import glob
+from os.path import basename
 from dfs.datasheets import parser
 from dfs.datasheets import writer
 
 
 def run(data_year, input_directory, output_directory):
-    p = parser.DatasheetParser2013()
+    if 2013 == int(data_year):
+        p = parser.DatasheetParser2013()
+    elif 2014 == int(data_year):
+        p = parser.DatasheetParser2014()
+    else:
+        raise Exception('{} is not a supported data year'.format(data_year))
+
     w = writer.DatasheetWriter()
 
     for filename in sorted(glob.glob('{}/*.xlsx'.format(input_directory))):
-        print("Processing file '{}':".format(filename))
+        print("{}:".format(basename(filename)))
 
         try:
             datasheet = p.parse_datasheet(filename)
-            w.write(datasheet, output_directory)
+
+            datasheet.postprocess()
+            datasheet.validate()
+
+            try:
+                w.write(datasheet, output_directory)
+            except Exception:
+                raise Exception('Encountered a fatal error writing the converted file. Validation errors may need to be fixed first.')
+
         except Exception as e:
             print('Fatal error encountered: {}'.format(str(e)))
 
+        print('\n')
 
-if 4 < len(sys.argv):
+
+if 4 > len(sys.argv):
     raise Exception('Usage: python3 run.py [data year] [input file] [output directory]')
 
 

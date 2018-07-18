@@ -1,4 +1,5 @@
 species_name
+acpa
 acpe
 acru
 acsa
@@ -11,9 +12,11 @@ alpe
 altr
 ambr
 amsp
+apam
 arnu
 arsp
 artr
+asca
 ascl
 asqu
 aster
@@ -33,18 +36,24 @@ cadi
 cagl
 caov
 capl
+cardu
 casp
 cath
 cato
 ceam
 ceor
+cham
 chma
+cial
 cica
+cisp
 clca
 clvi
 coal
 cope
+cose
 cosp
+cotr
 crsp
 cyac
 deob
@@ -56,6 +65,7 @@ didi
 drsp
 elum
 epco
+ephe
 epre
 eral
 eram
@@ -63,6 +73,7 @@ erhi
 ersp
 eudi
 eupu
+faga
 fagr
 fasa
 fasc
@@ -76,6 +87,7 @@ gasp
 gate
 gesp
 gins
+gosp
 grass
 havi
 heac
@@ -93,6 +105,7 @@ juci
 juef
 kala
 laca
+lisp
 litu
 loma
 lomo
@@ -100,6 +113,7 @@ losp
 lyqu2
 lysp
 lysp1
+lysp2
 maac
 maca
 mara
@@ -109,11 +123,13 @@ mevi
 midi
 mire
 mivi
+moco
 moss
 moun
 neca
 nysy
 oscl
+oscl2
 oslo
 osvi
 oxsp
@@ -127,11 +143,13 @@ pevi
 pham
 piab
 pipu
+pipu2
 pire
 piri
 pisp
 pist
 pivi
+plor
 plsp
 poac
 pobi
@@ -152,6 +170,7 @@ prsp
 prvi
 psme
 ptaq
+pyte
 qual
 quco
 quil
@@ -240,6 +259,7 @@ urdi
 vapa
 vasp
 veof
+veth
 vevi
 viac
 vicia
@@ -250,3 +270,6 @@ vitis
 vitr
 wafr
 water
+trail
+bepa
+uvsp

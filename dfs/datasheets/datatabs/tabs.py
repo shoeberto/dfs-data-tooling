@@ -1,7 +1,6 @@
 import csv
+import numbers
 from abc import ABC, abstractmethod
-
-MASTER_SPECIES_LIST = None
 
 
 class Validatable(ABC):
@@ -42,8 +41,40 @@ class Validatable(ABC):
         'vapa': 'vasp',
         'rual': 'rusp',
         'vacc': 'vasp',
-        'hupe': 'husp'
+        'hupe': 'husp',
+        'eram': 'ersp',
+        'dead': 'dewo',
+        'vivi': 'vitis',
+        'lysp3': 'lysp',
+        'befam': 'faga',
+        'befa': 'faga'
     }
+
+    COVER_SPECIES = [
+        'acpa', 'adpe', 'agal', 'agsp', 'alpe', 'altr', 'ambr', 'apam', 'arnu', 'arsp', 'artr', 'asca', 'ascl', 'asqu',
+        'aster', 'berbe', 'beth', 'bliv', 'bodt', 'bovi', 'brsp', 'cadi', 'capl', 'cardu', 'cath', 'ceam', 'ceor',
+        'cham', 'chma', 'cial', 'cica', 'cisp', 'clca', 'clvi', 'coal', 'cope', 'cose', 'cotr', 'cyac', 'deob', 'depu',
+        'dewo', 'dica', 'didi', 'drsp', 'elum', 'epco', 'ephe', 'epre', 'eral', 'eram', 'erhi', 'ersp', 'eudi',
+        'eupu', 'fasa', 'fasc', 'frvi', 'galiu', 'gapr', 'gasp', 'gate', 'gesp', 'gins', 'gosp', 'grass', 'havi', 'heac',
+        'hive', 'hulu', 'husp', 'hyca', 'hymu', 'hyvi', 'ilmo', 'imca', 'imsp', 'isve', 'juef', 'kala', 'laca', 'lisp', 'loma',
+        'lomo', 'losp', 'lyqu2', 'lysp', 'lysp1', 'lysp2', 'maca', 'mara', 'masp', 'meli', 'mevi', 'midi', 'mire', 'mivi',
+        'moco', 'moss', 'moun', 'neca', 'oscl', 'oscl2', 'oslo', 'oxsp', 'paca', 'paqu', 'patr', 'pelo', 'pesa', 'pesp', 'pevi',
+        'pham', 'pipu2', 'plor', 'plsp', 'poac', 'pobi', 'pofr', 'poly', 'popa', 'pope', 'popu', 'poten', 'prena', 'prvi', 'ptaq',
+        'pyte', 'quil', 'raab', 'rasp', 'rhaz', 'rhma', 'rhpr', 'risp', 'road', 'rock', 'romu', 'root', 'rual', 'rume', 'rush',
+        'rusp', 'saca', 'sara', 'sasp', 'scla', 'sedge', 'smro', 'smsp', 'soam', 'soam3', 'sofl', 'sosp', 'stam', 'strep', 'stro',
+        'stsp', 'taof', 'thdi', 'thno', 'tico', 'tora', 'trade', 'trash', 'trbo', 'trer', 'trill', 'trsp', 'trun', 'trvi', 'ulam',
+        'ulru', 'ulsp', 'urdi', 'uvsp', 'vapa', 'vasp', 'veof', 'veth', 'vevi', 'viac', 'vicia', 'viro', 'visp', 'visp1', 'vitis',
+        'vitr', 'wafr', 'water'
+    ]
+
+    TREE_SPECIES = [
+        'acpe', 'acru', 'acsa', 'acsp', 'aial', 'amsp', 'beal', 'bele', 'besp', 'caca', 'caco', 'cade', 'cagl', 'caov', 'casp',
+        'cato', 'cosp', 'crsp', 'fagr', 'fram', 'frpe', 'frsp', 'juci', 'litu', 'maac', 'nysy', 'osvi', 'piab', 'pipu', 'pire',
+        'piri', 'pisp', 'pist', 'pivi', 'pogr4', 'pop2', 'potr5', 'prpe', 'prse', 'prsp', 'psme', 'qual', 'quco', 'qumo', 'quru',
+        'qusp', 'quve', 'rhco', 'rhus', 'saal', 'snag', 'tiam', 'tsca'
+    ]
+
+    MASTER_SPECIES_LIST = None
 
 
     @abstractmethod
@@ -58,39 +89,125 @@ class Validatable(ABC):
             field_none_values[field] = (None == getattr(self, field))
 
         if 1 < len(set(field_none_values.values())):
-            return [RequiredFieldMismatchValidationError()]
+            return [RequiredFieldMismatchValidationError(self.get_object_type())]
 
         return []
+
+
+    def override_scale(self, scale):
+        if scale in [1000, 300]:
+            return scale
+        elif scale == 1:
+            return 1000
+        elif scale == 3:
+            return 300
+
+        raise Exception('{} is not a valid scale'.format(scale))
 
 
     def override_species(self, species):
         if None == species:
             return species
 
-        species = species.lower().strip()
+        try:
+            species = species.lower().strip()
+        except Exception:
+            raise Exception("Cannot parse species code '{}'".format(species))
 
-        if species in self.SPECIES_OVERRIDES:
-            return self.SPECIES_OVERRIDES[species]
+        if species in Validatable.SPECIES_OVERRIDES:
+            return Validatable.SPECIES_OVERRIDES[species]
 
         return species
 
     
     def validate_species(self, species):
-        global MASTER_SPECIES_LIST
-
-        if None == MASTER_SPECIES_LIST:
+        if None == Validatable.MASTER_SPECIES_LIST:
             with open('data/master_species_list.csv', 'r') as f:
-                MASTER_SPECIES_LIST = [row['species_name'] for row in csv.DictReader(f)]
+                Validatable.MASTER_SPECIES_LIST = [row['species_name'] for row in csv.DictReader(f)]
 
-        if species.lower().strip() not in MASTER_SPECIES_LIST:
-            return [SpeciesValidationError(self.__class__.__name__, species)]
+        if not isinstance(species, str):
+            return [FieldValidationError(self.get_object_type(), 'species known or species guess', 'a text string', str(species))]
+
+        species = species.lower().strip()
+
+        if species not in Validatable.MASTER_SPECIES_LIST:
+            return [SpeciesValidationError(self.get_object_type(), species)]
+
+        if species[0:3] == 'unk':
+            return [UnidentifiedUnknownError(self.get_object_type(), species)]
 
         return []
+
+
+    def validate_attribute_type(self, attributes, data_type):
+        errors = []
+        for attribute in attributes:
+            value = getattr(self, attribute)
+
+            if None == value:
+                continue
+
+            if not isinstance(value, data_type):
+                errors.append(InvalidDataTypeError(self.get_object_type(), attribute, str(data_type), str(type(value))))
+
+        return errors
+
+
+    def generate_primary_key(self, species, columns):
+        values = []
+        for column in columns:
+            attr = getattr(species, column)
+
+            if callable(attr):
+                values.append(attr())
+            else:
+                values.append(attr)
+
+        return ','.join([str(x) for x in values if x != None])
+
+
+    def check_primary_key_uniquness(self, species, columns):
+        try:
+            primary_keys = [self.generate_primary_key(x, columns) for x in species]
+        except Exception as e:
+            print(FatalExceptionError(self.get_object_type(), e).get_message())
+            raise Exception('Fatal error encountered generating primary key.')
+
+        duplicates = set([x for x in primary_keys if primary_keys.count(x) > 1])
+
+        if duplicates:
+            for duplicate in duplicates:
+                print(DuplicateRowValidationError(self.get_object_type(), duplicate).get_message())
+
+            raise Exception('Cannot process file with duplicate cover species.')
+
+
+    def get_object_type(self):
+        return self.__class__.__name__
+
+
+class Species(Validatable):
+    def __init__(self):
+        self.species_known = None
+        self.species_guess = None
+
+
+    def get_species_known(self):
+        return self.override_species(self.species_known)
+
+
+    def get_species_guess(self):
+        return self.override_species(self.species_guess)
 
 
 class Tab(Validatable):
     def __init__(self):
         pass
+        
+
+    @abstractmethod
+    def postprocess(self):
+        """Abstract method for performing post-processing."""
 
 
 class ValidationError:
@@ -126,6 +243,16 @@ class FieldCountValidationError(ValidationError):
         return "In {}: Expected count of field '{}' to be {}, instead counted {}".format(self.object_type, self.field, self.expected, self.actual)
 
 
+class DuplicateRowValidationError(ValidationError):
+    def __init__(self, tab, combination):
+        self.tab = tab
+        self.combination = combination
+
+
+    def get_message(self):
+        return "In {}: Field values '{}' should be unique, but appears multiple times".format(self.tab, self.combination)
+
+
 class RequiredFieldMismatchValidationError(ValidationError):
     def __init__(self, object_type):
         self.object_type = object_type
@@ -133,6 +260,16 @@ class RequiredFieldMismatchValidationError(ValidationError):
 
     def get_message(self):
         return 'In {}: mixture of empty and non-empty fields, where values are expected'.format(self.object_type)
+
+
+class MissingSubplotValidationError(ValidationError):
+    def __init__(self, object_type, collected_subplots):
+        self.object_type =  object_type
+        self.missing_subplots = [str(x) for x in (set(range(1, 6)) - set(collected_subplots))]
+
+    
+    def get_message(self):
+        return 'In {}: data not collected for subplots {}'.format(self.object_type, ', '.join(self.missing_subplots))
 
 
 class SpeciesValidationError(ValidationError):
@@ -143,3 +280,35 @@ class SpeciesValidationError(ValidationError):
 
     def get_message(self):
         return "In {}: '{}' is not a valid species".format(self.object_type, self.species)
+
+
+class InvalidDataTypeError(ValidationError):
+    def __init__(self, object_type, field, expected_type, actual_type):
+        self.object_type = object_type
+        self.field = field
+        self.expected_type = expected_type
+        self.actual_type = actual_type
+
+
+    def get_message(self):
+        return "In {}: Field '{}' should be of type '{}', instead is '{}'".format(self.object_type, self.field, self.expected_type, self.actual_type)
+
+
+class UnidentifiedUnknownError(ValidationError):
+    def __init__(self, object_type, unknown_name):
+        self.object_type = object_type
+        self.unknown_name = unknown_name
+
+
+    def get_message(self):
+        return "In {}: Unidentified unknown species labeled as '{}'".format(self.object_type, self.unknown_name)
+
+
+class FatalExceptionError(ValidationError):
+    def __init__(self, object_type, exception):
+        self.object_type = object_type
+        self.exception = exception
+
+    
+    def get_message(self):
+        return "Fatal exception thrown in {} with message: {}".format(self.object_type, str(self.exception))
