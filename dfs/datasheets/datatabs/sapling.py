@@ -49,10 +49,10 @@ class SaplingSpecies(Species):
         self.species_known = self.override_species(self.species_known)
         self.species_guess = self.override_species(self.species_guess)
 
-        if self.get_species_known() in Tab.COVER_SPECIES:
+        if self.get_species_known() not in Tab.TREE_SPECIES:
             validation_errors.append(FieldValidationError(self.get_object_type(), 'species known', 'sapling species', self.get_species_known()))
 
-        if self.get_species_guess() in Tab.COVER_SPECIES:
+        if None != self.get_species_guess() and self.get_species_guess() not in Tab.TREE_SPECIES:
             validation_errors.append(FieldValidationError(self.get_object_type(), 'species guess', 'sapling species', self.get_species_known()))
 
         if self.micro_plot_id not in range(1, 6):

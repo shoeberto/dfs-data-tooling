@@ -31,8 +31,8 @@ class GeneralTab(Tab):
         if self.plot_number not in range(1, 51):
             validation_errors.append(FieldValidationError(self.get_object_type(), 'plot number', '1-50', self.plot_number))
 
-        if self.deer_impact not in range(1, 6):
-            validation_errors.append(FieldValidationError(self.get_object_type(), 'deer impact', '1-5', self.deer_impact))
+        if self.deer_impact not in range(0, 6):
+            validation_errors.append(FieldValidationError(self.get_object_type(), 'deer impact', '0-5', self.deer_impact))
 
         if None == self.collection_date:
             validation_errors.append(FieldValidationError(self.get_object_type(), 'collection date', 'a date', 'None'))

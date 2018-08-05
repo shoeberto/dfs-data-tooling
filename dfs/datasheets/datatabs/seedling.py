@@ -74,10 +74,10 @@ class SeedlingSpecies(Species):
         self.species_guess = self.override_species(self.species_guess)
         self.species_known = self.override_species(self.species_known)
 
-        if self.get_species_known() in Tab.COVER_SPECIES:
+        if self.get_species_known() not in Validatable.SEEDLING_SPECIES:
             validation_errors.append(FieldValidationError(self.get_object_type(), 'species known', 'seedling species', self.get_species_known()))
 
-        if self.get_species_guess() in Tab.COVER_SPECIES:
+        if None != self.get_species_guess() and self.get_species_guess() not in Validatable.SEEDLING_SPECIES:
             validation_errors.append(FieldValidationError(self.get_object_type(), 'species guess', 'seedling species', self.get_species_known()))
 
         if self.micro_plot_id not in range(1, 6):

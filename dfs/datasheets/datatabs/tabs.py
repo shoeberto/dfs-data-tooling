@@ -47,34 +47,36 @@ class Validatable(ABC):
         'vivi': 'vitis',
         'lysp3': 'lysp',
         'befam': 'faga',
-        'befa': 'faga'
+        'befa': 'faga',
+        'prsp2': 'prsp'
     }
 
-    COVER_SPECIES = [
-        'acpa', 'adpe', 'agal', 'agsp', 'alpe', 'altr', 'ambr', 'apam', 'arnu', 'arsp', 'artr', 'asca', 'ascl', 'asqu',
-        'aster', 'berbe', 'beth', 'bliv', 'bodt', 'bovi', 'brsp', 'cadi', 'capl', 'cardu', 'cath', 'ceam', 'ceor',
-        'cham', 'chma', 'cial', 'cica', 'cisp', 'clca', 'clvi', 'coal', 'cope', 'cose', 'cotr', 'cyac', 'deob', 'depu',
-        'dewo', 'dica', 'didi', 'drsp', 'elum', 'epco', 'ephe', 'epre', 'eral', 'eram', 'erhi', 'ersp', 'eudi',
-        'eupu', 'fasa', 'fasc', 'frvi', 'galiu', 'gapr', 'gasp', 'gate', 'gesp', 'gins', 'gosp', 'grass', 'havi', 'heac',
-        'hive', 'hulu', 'husp', 'hyca', 'hymu', 'hyvi', 'ilmo', 'imca', 'imsp', 'isve', 'juef', 'kala', 'laca', 'lisp', 'loma',
-        'lomo', 'losp', 'lyqu2', 'lysp', 'lysp1', 'lysp2', 'maca', 'mara', 'masp', 'meli', 'mevi', 'midi', 'mire', 'mivi',
-        'moco', 'moss', 'moun', 'neca', 'oscl', 'oscl2', 'oslo', 'oxsp', 'paca', 'paqu', 'patr', 'pelo', 'pesa', 'pesp', 'pevi',
-        'pham', 'pipu2', 'plor', 'plsp', 'poac', 'pobi', 'pofr', 'poly', 'popa', 'pope', 'popu', 'poten', 'prena', 'prvi', 'ptaq',
-        'pyte', 'quil', 'raab', 'rasp', 'rhaz', 'rhma', 'rhpr', 'risp', 'road', 'rock', 'romu', 'root', 'rual', 'rume', 'rush',
-        'rusp', 'saca', 'sara', 'sasp', 'scla', 'sedge', 'smro', 'smsp', 'soam', 'soam3', 'sofl', 'sosp', 'stam', 'strep', 'stro',
-        'stsp', 'taof', 'thdi', 'thno', 'tico', 'tora', 'trade', 'trash', 'trbo', 'trer', 'trill', 'trsp', 'trun', 'trvi', 'ulam',
-        'ulru', 'ulsp', 'urdi', 'uvsp', 'vapa', 'vasp', 'veof', 'veth', 'vevi', 'viac', 'vicia', 'viro', 'visp', 'visp1', 'vitis',
-        'vitr', 'wafr', 'water'
-    ]
-
-    TREE_SPECIES = [
-        'acpe', 'acru', 'acsa', 'acsp', 'aial', 'amsp', 'beal', 'bele', 'besp', 'caca', 'caco', 'cade', 'cagl', 'caov', 'casp',
-        'cato', 'cosp', 'crsp', 'fagr', 'fram', 'frpe', 'frsp', 'juci', 'litu', 'maac', 'nysy', 'osvi', 'piab', 'pipu', 'pire',
-        'piri', 'pisp', 'pist', 'pivi', 'pogr4', 'pop2', 'potr5', 'prpe', 'prse', 'prsp', 'psme', 'qual', 'quco', 'qumo', 'quru',
-        'qusp', 'quve', 'rhco', 'rhus', 'saal', 'snag', 'tiam', 'tsca'
-    ]
+    COVER_SPECIES = None
+    TREE_SPECIES = None
+    SEEDLING_SPECIES = None
 
     MASTER_SPECIES_LIST = None
+
+
+    def __init__(self):
+        if None == Validatable.MASTER_SPECIES_LIST:
+            with open('data/master_species_list.csv', 'r') as f:
+                Validatable.MASTER_SPECIES_LIST = []
+                Validatable.COVER_SPECIES = []
+                Validatable.TREE_SPECIES = []
+                Validatable.SEEDLING_SPECIES = []
+
+                for row in csv.DictReader(f):
+                    Validatable.MASTER_SPECIES_LIST.append(row['species_name'])
+
+                    if 'TRUE' == row['cover']:
+                        Validatable.COVER_SPECIES.append(row['species_name'])
+
+                    if 'TRUE' == row['tree']:
+                        Validatable.TREE_SPECIES.append(row['species_name'])
+
+                    if 'TRUE' == row['seedling']:
+                        Validatable.SEEDLING_SPECIES.append(row['species_name'])
 
 
     @abstractmethod
@@ -121,10 +123,6 @@ class Validatable(ABC):
 
     
     def validate_species(self, species):
-        if None == Validatable.MASTER_SPECIES_LIST:
-            with open('data/master_species_list.csv', 'r') as f:
-                Validatable.MASTER_SPECIES_LIST = [row['species_name'] for row in csv.DictReader(f)]
-
         if not isinstance(species, str):
             return [FieldValidationError(self.get_object_type(), 'species known or species guess', 'a text string', str(species))]
 

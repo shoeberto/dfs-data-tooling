@@ -94,6 +94,10 @@ class CoverSpecies(Species):
     DEER_INDICATOR_SPECIES = ['mara', 'maca', 'pobi', 'popu', 'trill', 'trer', 'trun', 'mevi']
     TRILLIUM_SPECIES = ['trer', 'trun', 'trill']
     HEIGHT_OPTIONAL_SPECIES = ['dewo', 'moss', 'bliv', 'bodt', 'rock', 'root', 'road', 'trash', 'water', 'trail']
+    COVER_SPECIES_OVERRIDES = {
+        'snag': 'bodt',
+        'prsp': 'prena'
+    }
     
 
     def __init__(self):
@@ -110,21 +114,17 @@ class CoverSpecies(Species):
 
 
     def fill_empty_values_from_cover_species(self, source_species):
-        for field in ['percent_cover', 'average_height', 'count', 'flower', 'number_of_stems']:
+        for field in ['percent_cover', 'average_height', 'flower', 'number_of_stems']:
             if None == getattr(self, field) and None != getattr(source_species, field):
-                print('Copying field {} from {},{},{},{} to {},{},{},{}'.format(
-                    field, 
-                    source_species.micro_plot_id,
-                    source_species.quarter,
-                    source_species.scale,
-                    source_species.get_species_known(), 
-                    self.micro_plot_id,
-                    self.quarter,
-                    self.scale,
-                    self.get_species_known()
-                ))
-
+                print(f'Copying field {field} from {source_species.micro_plot_id},{source_species.quarter},{source_species.scale},{source_species.get_species_known()} to {self.micro_plot_id},{self.quarter},{self.scale},{self.get_species_known()}') 
                 setattr(self, field, getattr(source_species, field))
+
+        if None == self.percent_cover:
+            return
+
+        if 0 < self.percent_cover or self.get_species_known() in CoverSpecies.DEER_INDICATOR_SPECIES:
+            print(f'Copying count from {source_species.micro_plot_id},{source_species.quarter},{source_species.scale},{source_species.get_species_known()} to {self.micro_plot_id},{self.quarter},{self.scale},{self.get_species_known()}') 
+            self.count = source_species.count
 
 
     def get_species_known(self):
@@ -140,8 +140,8 @@ class CoverSpecies(Species):
             return None
 
         try:
-            if 'snag' == species.lower():
-                return 'bodt'
+            if species.lower() in CoverSpecies.COVER_SPECIES_OVERRIDES:
+                return CoverSpecies.COVER_SPECIES_OVERRIDES[species.lower()]
         except Exception:
             raise Exception("Cannot parse species code '{}'".format(species))
 
@@ -178,6 +178,12 @@ class CoverSpecies(Species):
 
         if None != self.species_guess:
             validation_errors += self.validate_species(self.species_guess)
+
+        if self.get_species_known() not in Validatable.COVER_SPECIES:
+            validation_errors.append(FieldValidationError(self.get_object_type(), 'species known', 'cover species', self.get_species_known()))
+
+        if None != self.get_species_guess() and self.get_species_guess() not in Validatable.COVER_SPECIES:
+            validation_errors.append(FieldValidationError(self.get_object_type(), 'species guess', 'cover species', self.get_species_guess()))
 
         if self.percent_cover not in range(0, 10):
             validation_errors.append(FieldValidationError(self.get_object_type(), 'percent cover of species {}'.format(self.species_known), '0-9', self.percent_cover))

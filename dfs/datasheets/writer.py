@@ -82,7 +82,7 @@ class DatasheetWriter:
 
         i = 0
         for rownumber in range(9, 14):
-            if i > len(sheet.tabs[datasheet.TAB_NAME_GENERAL].subplots):
+            if i >= len(sheet.tabs[datasheet.TAB_NAME_GENERAL].subplots):
                 continue
 
             subplot = sheet.tabs[datasheet.TAB_NAME_GENERAL].subplots[i]
@@ -127,7 +127,7 @@ class DatasheetWriter:
 
         i = 0
         for rownumber in range(17, 22):
-            if i > len(sheet.tabs[datasheet.TAB_NAME_GENERAL].subplots):
+            if i >= len(sheet.tabs[datasheet.TAB_NAME_GENERAL].subplots):
                 continue
 
             subplot = sheet.tabs[datasheet.TAB_NAME_GENERAL].subplots[i]

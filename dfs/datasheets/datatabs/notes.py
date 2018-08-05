@@ -44,8 +44,8 @@ class NotesTab(Tab):
         impact_notes = getattr(self, '{}_notes'.format(field))
         
         if None != impact_rating:
-            if 1 > impact_rating or 5 < impact_rating:
-                validation_errors.append(FieldValidationError(self.get_object_type(), '{} impact rating'.format(field), '1-5', impact_rating))
+            if 0 > impact_rating or 5 < impact_rating:
+                validation_errors.append(FieldValidationError(self.get_object_type(), '{} impact rating'.format(field), '0-5', impact_rating))
 
             if None == impact_notes:
                 validation_errors.append(FieldValidationError(self.get_object_type(), '{} impact notes'.format(field), 'non-empy', impact_notes))

@@ -1,15 +1,15 @@
 import sys
 import glob
 from os.path import basename
-from dfs.datasheets import parser
+from dfs.datasheets import parsers
 from dfs.datasheets import writer
 
 
 def run(data_year, input_directory, output_directory):
     if 2013 == int(data_year):
-        p = parser.DatasheetParser2013()
+        p = parsers.DatasheetParser2013()
     elif 2014 == int(data_year):
-        p = parser.DatasheetParser2014()
+        p = parsers.DatasheetParser2014()
     else:
         raise Exception('{} is not a supported data year'.format(data_year))
 
