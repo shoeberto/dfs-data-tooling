@@ -61,6 +61,16 @@ class DatasheetParser(ABC):
         """
 
 
+    def parse_note_fields(self, worksheet, data_range):
+        notes_rows = []
+        for row in worksheet[data_range]:
+            for cell in row:
+                if None != cell.value:
+                    notes_rows.append(cell.value)
+
+        return ' '.join(notes_rows).strip()
+
+
     @abstractmethod
     def parse_notes_tab(self, workbook, sheet):
         """

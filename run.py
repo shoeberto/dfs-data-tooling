@@ -10,8 +10,10 @@ def run(data_year, input_directory, output_directory):
         p = parsers.DatasheetParser2013()
     elif 2014 == int(data_year):
         p = parsers.DatasheetParser2014()
+    elif 2015 == int(data_year):
+        p = parsers.DatasheetParser2015()
     else:
-        raise Exception('{} is not a supported data year'.format(data_year))
+        raise Exception(f'{data_year} is not a supported data year')
 
     w = writer.DatasheetWriter()
 

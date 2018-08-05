@@ -3,41 +3,74 @@ import dfs.datasheets.datatabs as datatabs
 import dfs.datasheets.datasheet as datasheet
 
 
-class DatasheetParser2014(DatasheetParser):
-    def __init__(self):
-        super().__init__()
-
-
+class DatasheetParser2015(DatasheetParser):
     def parse_plot_general_tab(self, workbook, sheet):
         worksheet = workbook[datasheet.TAB_NAME_GENERAL]
         tab = datatabs.general.PlotGeneralTab()
 
-        if worksheet['D1'].value:
-            tab.study_area = self.parse_int(worksheet['D1'].value)
-            tab.plot_number = self.parse_int(worksheet['D2'].value)
-        else:
-            study_area, plot_number = str(worksheet['D2'].value).split('_')
-            tab.study_area = self.parse_int(study_area)
-            tab.plot_number = self.parse_int(plot_number)
+        tab.study_area = self.parse_int(worksheet['B1'].value)
+        tab.plot_number = self.parse_int(worksheet['B2'].value)
+        tab.deer_impact = self.parse_int(worksheet['B3'].value)
+        tab.collection_date = worksheet['B4'].value
 
-        tab.deer_impact = self.parse_int(worksheet['D3'].value)
-        tab.collection_date = worksheet['M3'].value
+        # TODO: what about lat/long at the top of file? D2/D3?
 
-        # not recorded for 2014
+        # not recorded for 2015
         tab.fenced_subplot_condition = datatabs.general.FencedSubplotConditions()
 
-        for rownumber in range(6, 11):
-            subplot = datatabs.general.PlotGeneralTabSubplot()
-            subplot.micro_plot_id = self.parse_int(worksheet['J{}'.format(rownumber)].value)
+        for rownumber in range(27, 42):
+            latitude = self.parse_float(worksheet[f'B{rownumber}'].value)
+            longitude = self.parse_float(worksheet[f'C{rownumber}'].value)
 
-            if None == subplot.micro_plot_id:
-                subplot.micro_plot_id = rownumber - 5
+            if None == latitude or None == longitude:
+                continue
+
+            subplot = datatabs.general.PlotGeneralTabSubplot()
+            subplot.micro_plot_id = self.parse_int(worksheet['A{}'.format(rownumber)].value)
 
             # Ignore slope
-            subplot.slope = self.parse_int(worksheet['K{}'.format(rownumber)].value)
-            # forested not collected in 2014
+            subplot.latitude = latitude
+            subplot.longitude = longitude
+
+            # TODO: are either of these numbers?
+            subplot.disturbance = worksheet[f'D{rownumber}'].value
+            subplot.disturbance_type = worksheet[f'E{rownumber}'].value
+
+            # TODO: how to handle forested?
+            # forested_value = worksheet['D{}'.format(rownumber)].value
+            # if 1 == forested_value:
+            #     subplot.forested = 'Yes'
+            # elif 0 == forested_value:
+            #     subplot.forested = 'No'
+            # else:
+            #     pass
+                # TODO convert to error
+                # raise FieldValidationException('PlotGeneralTab', 'forested', '0 or 1', forested_value)
 
             tab.subplots.append(subplot)
+
+        for rownumber in range(46, 51):
+            if None != self.parse_int(worksheet[f'A{rownumber}'].value):
+                non_forested_azimuth = datatabs.general.NonForestedAzimuths()
+
+                non_forested_azimuth.micro_plot_id = self.parse_int(worksheet[f'A{rownumber}'].value)
+
+                # TODO: azimuth is int or float??
+                non_forested_azimuth.azimuth_1 = self.parse_int(worksheet[f'B{rownumber}'].value)
+                non_forested_azimuth.azimuth_2 = self.parse_int(worksheet[f'C{rownumber}'].value)
+                non_forested_azimuth.azimuth_3 = self.parse_int(worksheet[f'D{rownumber}'].value)
+
+
+        for rownumber in range(15, 25):
+            if None != worksheet[f'C{rownumber}'].value:
+                auxillary_post_location = datatabs.general.AuxillaryPostLocation()
+
+                auxillary_post_location.post = self.parse_int(worksheet[f'A{rownumber}'].value.replace('Post ', ''))
+                auxillary_post_location.micro_plot_id = self.parse_int(worksheet[f'B{rownumber}'].value)
+                auxillary_post_location.azimuth = self.parse_int(worksheet[f'D{rownumber}'].value)
+                auxillary_post_location.distance = self.parse_float(worksheet[f'E{rownumber}'].value)
+
+                tab.auxillary_post_locations.append(auxillary_post_location)
 
         return tab
 
@@ -46,27 +79,25 @@ class DatasheetParser2014(DatasheetParser):
         worksheet = workbook[datasheet.TAB_NAME_GENERAL]
         tab = datatabs.witnesstree.WitnessTreeTab()
 
-        for rownumber in range(6, 9):
+        for rownumber in range(8, 11):
             tree = datatabs.witnesstree.WitnessTreeTabTree()
 
-            # in 2013, all witness trees were at microplot 1
+            # TODO: still at micro 1 in 2015?
             tree.micro_plot_id = 1
 
-            tree.tree_number = self.parse_int(worksheet['B{}'.format(rownumber)].value[1])
-            tree.species_known = worksheet['C{}'.format(rownumber)].value
-            tree.species_guess = worksheet['D{}'.format(rownumber)].value
-            tree.dbh = self.parse_float(worksheet['E{}'.format(rownumber)].value)
+            tree.tree_number = self.parse_int(worksheet[f'A{rownumber}'].value[1])
+            tree.species_known = worksheet[f'B{rownumber}'].value
+            tree.species_guess = worksheet[f'C{rownumber}'].value
+            tree.dbh = self.parse_float(worksheet[f'D{rownumber}'].value)
 
-            live_or_dead = worksheet['F{}'.format(rownumber)].value
+            live_or_dead = self.parse_int(worksheet[f'E{rownumber}'].value)
 
-            # normalize L/D to uppercase if present, else set the raw value and validate later
-            if None != live_or_dead and live_or_dead.lower() in ['l', 'd']:
-                tree.live_or_dead = live_or_dead.upper()
-            else:
-                tree.live_or_dead = live_or_dead
+            # TODO: this logic is consistent?
+            if None != live_or_dead:
+                tree.live_or_dead = 'L' if 1 == live_or_dead else 'D'
 
-            tree.azimuth = self.parse_int(worksheet['G{}'.format(rownumber)].value)
-            tree.distance = self.parse_int(worksheet['H{}'.format(rownumber)].value)
+            tree.azimuth = self.parse_int(worksheet[f'F{rownumber}'].value)
+            tree.distance = self.parse_int(worksheet[f'G{rownumber}'].value)
 
             tab.witness_trees.append(tree)
                         
@@ -78,7 +109,7 @@ class DatasheetParser2014(DatasheetParser):
         tab = datatabs.cover.CoverTableTab()
 
         row_valid = True
-        i = 5
+        i = 3
 
         while (row_valid):
             if not worksheet['A{}'.format(i)].value:
@@ -111,13 +142,6 @@ class DatasheetParser2014(DatasheetParser):
 
             i += 1
 
-        collected_plots = list(set([x.micro_plot_id for x in tab.cover_species]))
-
-        for i in range(0, len(sheet.tabs[datasheet.TAB_NAME_GENERAL].subplots)):
-            micro_plot_id = sheet.tabs[datasheet.TAB_NAME_GENERAL].subplots[i].micro_plot_id
-            sheet.tabs[datasheet.TAB_NAME_GENERAL].subplots[i].collected = 'Yes' if micro_plot_id in collected_plots else 'No'
-            sheet.tabs[datasheet.TAB_NAME_GENERAL].subplots[i].forested = 'Yes' if micro_plot_id in collected_plots else 'No'
-
         return tab
 
 
@@ -125,26 +149,26 @@ class DatasheetParser2014(DatasheetParser):
         worksheet = workbook[datasheet.TAB_NAME_NOTES]
         tab = datatabs.notes.NotesTab()
 
-        tab.seedlings = worksheet['D11'].value
-        tab.seedlings_notes = worksheet['F11'].value
+        tab.seedlings = worksheet['B10'].value
+        tab.seedlings_notes = self.parse_note_fields(worksheet, 'D10:K11')
 
-        tab.browsing = worksheet['D14'].value
-        tab.browsing_notes = worksheet['F14'].value
+        tab.browsing = worksheet['B13'].value
+        tab.browsing_notes = self.parse_note_fields(worksheet, 'D13:K14')
 
-        tab.indicators = worksheet['D17'].value
-        tab.indicators_notes = worksheet['F17'].value
+        tab.indicators = worksheet['B16'].value
+        tab.indicators_notes = self.parse_note_fields(worksheet, 'D16:K17')
 
-        tab.general_notes = self.parse_note_fields(worksheet, 'C22:M42')
+        tab.general_notes = self.parse_note_fields(worksheet, 'A21:K41')
 
         return tab
 
 
     def parse_sapling_tab(self, workbook, sheet):
-        worksheet = workbook['Sapling_(1-5")']
+        worksheet = workbook[datasheet.TAB_NAME_SAPLING]
         tab = datatabs.sapling.SaplingTab()
 
         row_valid = True
-        i = 5
+        i = 3
 
         subplot_sapling_numbers = {}
 
@@ -177,11 +201,11 @@ class DatasheetParser2014(DatasheetParser):
 
 
     def parse_seedling_tab(self, workbook, sheet):
-        worksheet = workbook['Seedling_(0-1")']
+        worksheet = workbook[datasheet.TAB_NAME_SEEDLING]
         tab = datatabs.seedling.SeedlingTable()
 
         row_valid = True
-        i = 5
+        i = 3
 
         while (row_valid):
             if not worksheet['A{}'.format(i)].value:
@@ -196,23 +220,27 @@ class DatasheetParser2014(DatasheetParser):
             species.scale = self.parse_int(worksheet['C{}'.format(i)].value)
             species.species_known = worksheet['D{}'.format(i)].value
             species.species_guess = worksheet['E{}'.format(i)].value
-            species.sprout = 0
-            species.zero_six_inches = worksheet['F{}'.format(i)].value
-            species.six_twelve_inches = worksheet['G{}'.format(i)].value
-            species.one_three_feet_total = worksheet['H{}'.format(i)].value
-            species.one_three_feet_browsed = worksheet['I{}'.format(i)].value
+            species.sprout = self.parse_int(worksheet[f'F{i}'].value)
+
+            if None == species.sprout:
+                species.sprout = 0
+
+            species.zero_six_inches = worksheet['G{}'.format(i)].value
+            species.six_twelve_inches = worksheet['H{}'.format(i)].value
+            species.one_three_feet_total = worksheet['I{}'.format(i)].value
+            species.one_three_feet_browsed = worksheet['J{}'.format(i)].value
 
             if species.one_three_feet_total and not species.one_three_feet_browsed:
                 species.one_three_feet_browsed = 0
 
-            species.three_five_feet_total = worksheet['J{}'.format(i)].value
-            species.three_five_feet_browsed = worksheet['K{}'.format(i)].value
+            species.three_five_feet_total = worksheet['K{}'.format(i)].value
+            species.three_five_feet_browsed = worksheet['L{}'.format(i)].value
 
             if species.three_five_feet_total and not species.three_five_feet_browsed:
                 species.three_five_feet_browsed = 0
 
-            species.greater_five_feet_total = worksheet['L{}'.format(i)].value
-            species.greater_five_feet_browsed = worksheet['M{}'.format(i)].value
+            species.greater_five_feet_total = worksheet['M{}'.format(i)].value
+            species.greater_five_feet_browsed = worksheet['N{}'.format(i)].value
 
             if species.greater_five_feet_total and not species.greater_five_feet_browsed:
                 species.greater_five_feet_browsed = 0
@@ -234,13 +262,13 @@ class DatasheetParser2014(DatasheetParser):
         subplot_tree_numbers = {}
 
         while (row_valid):
-            if not worksheet['B{}'.format(i)].value:
+            if not worksheet['A{}'.format(i)].value:
                 row_valid = False
                 continue
 
             species = datatabs.tree.TreeTableSpecies()
 
-            species.micro_plot_id = worksheet['B{}'.format(i)].value
+            species.micro_plot_id = worksheet['A{}'.format(i)].value
 
             if species.micro_plot_id not in subplot_tree_numbers:
                 subplot_tree_numbers[species.micro_plot_id] = 1
@@ -248,16 +276,15 @@ class DatasheetParser2014(DatasheetParser):
                 subplot_tree_numbers[species.micro_plot_id] += 1
 
             species.tree_number = subplot_tree_numbers[species.micro_plot_id]
-            species.species_known = worksheet['D{}'.format(i)].value
-            species.species_guess = worksheet['E{}'.format(i)].value
-            species.diameter_breast_height = self.parse_float(worksheet['F{}'.format(i)].value)
+            species.species_known = worksheet['C{}'.format(i)].value
+            species.species_guess = worksheet['D{}'.format(i)].value
+            species.diameter_breast_height = self.parse_float(worksheet['E{}'.format(i)].value)
 
-            live_or_dead = str(worksheet['G{}'.format(i)].value).upper()
+            live_or_dead = self.parse_int(worksheet['F{}'.format(i)].value)
 
-            if None != live_or_dead and live_or_dead.lower() in ['l', 'd']:
-                species.live_or_dead = live_or_dead.upper()
-            else:
-                species.live_or_dead = live_or_dead
+            # TODO: this logic is consistent?
+            if None != live_or_dead:
+                species.live_or_dead = 'L' if 1 == live_or_dead else 'L'
 
             species.comments = ''
 
@@ -267,8 +294,3 @@ class DatasheetParser2014(DatasheetParser):
 
         return tab
 
-
-    def validate_workbook(self, workbook, filepath):
-        for t in [datasheet.TAB_NAME_GENERAL, datasheet.TAB_NAME_TREE_TABLE, datasheet.TAB_NAME_COVER_TABLE, 'Sapling_(1-5")', 'Seedling_(0-1")']:
-            if t not in workbook:
-                raise Exception("Missing required worksheet '{}' in file '{}'".format(t, filepath))
