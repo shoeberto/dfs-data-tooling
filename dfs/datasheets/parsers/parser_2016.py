@@ -3,7 +3,7 @@ import dfs.datasheets.datatabs as datatabs
 import dfs.datasheets.datasheet as datasheet
 
 
-class DatasheetParser2015(DatasheetParser):
+class DatasheetParser2016(DatasheetParser):
     def parse_plot_general_tab(self, workbook, sheet):
         worksheet = workbook[datasheet.TAB_NAME_GENERAL]
         tab = datatabs.general.PlotGeneralTab()
@@ -13,44 +13,39 @@ class DatasheetParser2015(DatasheetParser):
         tab.deer_impact = self.parse_int(worksheet['B3'].value)
         tab.collection_date = worksheet['B4'].value
 
-        # TODO: what about lat/long at the top of file? D2/D3?
 
-        # not recorded for 2015
-        tab.fenced_subplot_condition = datatabs.general.FencedSubplotConditions()
-
-        for rownumber in range(27, 42):
-            # TODO: parsing lat/lon appears to produce incorrect results due to conversion formula at write time
-            latitude = self.parse_float(worksheet[f'B{rownumber}'].value)
-            longitude = self.parse_float(worksheet[f'C{rownumber}'].value)
-
-            if None == latitude or None == longitude:
-                continue
-
+        for rownumber in range(8, 14):
             subplot = datatabs.general.PlotGeneralTabSubplot()
             subplot.micro_plot_id = self.parse_int(worksheet['A{}'.format(rownumber)].value)
 
             # Ignore slope
-            subplot.latitude = latitude
-            subplot.longitude = longitude
+            subplot.latitude = self.parse_float(worksheet[f'K{rownumber}'].value)
+            subplot.longitude = self.parse_float(worksheet[f'L{rownumber}'].value)
+
+            subplot.forested = worksheet['D{}'.format(rownumber)].value
 
             # TODO: are either of these numbers?
-            subplot.disturbance = worksheet[f'D{rownumber}'].value
-            subplot.disturbance_type = worksheet[f'E{rownumber}'].value
+            subplot.disturbance = self.parse_int(worksheet[f'E{rownumber}'].value)
+            subplot.disturbance_type = self.parse_int(worksheet[f'F{rownumber}'].value)
 
-            # TODO: how to handle forested?
-            # forested_value = worksheet['D{}'.format(rownumber)].value
-            # if 1 == forested_value:
-            #     subplot.forested = 'Yes'
-            # elif 0 == forested_value:
-            #     subplot.forested = 'No'
-            # else:
-            #     pass
-                # TODO convert to error
-                # raise FieldValidationException('PlotGeneralTab', 'forested', '0 or 1', forested_value)
+            subplot.collected = worksheet[f'G{rownumber}'].value
+
+            subplot.fenced = worksheet[f'H{rownumber}'].value
+
+            subplot.azimuth = self.parse_int(worksheet[f'I{rownumber}'].value)
+            subplot.altitude = self.parse_float(worksheet[f'J{rownumber}'].value)
 
             tab.subplots.append(subplot)
 
-        for rownumber in range(46, 51):
+
+        tab.fenced_subplot_condition = datatabs.general.FencedSubplotConditions()
+        tab.fenced_subplot_condition.active_exclosure = worksheet[f'A16'].value
+        tab.fenced_subplot_condition.repairs = worksheet[f'B16'].value
+        tab.fenced_subplot_condition.level = self.parse_int(worksheet[f'C16'].value)
+        tab.fenced_subplot_condition.notes = worksheet[f'D16'].value
+
+
+        for rownumber in range(40, 45):
             if None != self.parse_int(worksheet[f'A{rownumber}'].value):
                 non_forested_azimuth = datatabs.general.NonForestedAzimuths()
 
@@ -62,7 +57,7 @@ class DatasheetParser2015(DatasheetParser):
                 non_forested_azimuth.azimuth_3 = self.parse_int(worksheet[f'D{rownumber}'].value)
 
 
-        for rownumber in range(15, 25):
+        for rownumber in range(26, 36):
             if None != worksheet[f'C{rownumber}'].value:
                 auxillary_post_location = datatabs.general.AuxillaryPostLocation()
 
@@ -80,10 +75,10 @@ class DatasheetParser2015(DatasheetParser):
         worksheet = workbook[datasheet.TAB_NAME_GENERAL]
         tab = datatabs.witnesstree.WitnessTreeTab()
 
-        for rownumber in range(8, 11):
+        for rownumber in range(19, 22):
             tree = datatabs.witnesstree.WitnessTreeTabTree()
 
-            # TODO: still at micro 1 in 2015?
+            # TODO: still at micro 1 in 2016?
             tree.micro_plot_id = 1
 
             tree.tree_number = self.parse_int(worksheet[f'A{rownumber}'].value[1])
@@ -287,7 +282,7 @@ class DatasheetParser2015(DatasheetParser):
             if None != live_or_dead:
                 species.live_or_dead = 'L' if 1 == live_or_dead else 'D'
 
-            species.comments = ''
+            species.comments = worksheet[f'G{i}'].value
 
             tab.tree_species.append(species)
 
