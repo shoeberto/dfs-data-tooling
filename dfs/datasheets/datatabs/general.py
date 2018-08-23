@@ -48,7 +48,7 @@ class GeneralTab(Tab):
             validation_errors += subplot.validate()
             micro_plot_id_list.append(subplot.micro_plot_id)
 
-        if list(set(micro_plot_id_list)) != range(1, 6):
+        if set(micro_plot_id_list) != set(range(1, 6)):
             validation_errors.append(MissingSubplotValidationError(self.get_object_type(), micro_plot_id_list))
 
         last_post_number = None

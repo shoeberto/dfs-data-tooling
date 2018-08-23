@@ -48,7 +48,9 @@ class Validatable(ABC):
         'lysp3': 'lysp',
         'befam': 'faga',
         'befa': 'faga',
-        'prsp2': 'prsp'
+        'prsp2': 'prsp',
+        'mofa': 'morac',
+        'posc': 'fasc'
     }
 
     COVER_SPECIES = None

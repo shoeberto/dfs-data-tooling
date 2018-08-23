@@ -20,7 +20,7 @@ class DatasheetParser(ABC):
         self.validate_workbook(workbook, filepath)
 
         sheet = datasheet.Datasheet()
-        sheet.input_filename = basename(filepath)
+        sheet.output_filename = self.format_output_filename(basename(filepath))
 
         sheet.tabs[datasheet.TAB_NAME_GENERAL] = self.parse_plot_general_tab(workbook, sheet)
         sheet.tabs[datasheet.TAB_NAME_WITNESS_TREES] = self.parse_witness_tree_tab(workbook, sheet)
@@ -118,6 +118,13 @@ class DatasheetParser(ABC):
 
         Keyword arguments:
         workbook -- the source workbook
+        """
+
+
+    @abstractmethod
+    def format_output_filename(self, input_filename):
+        """
+        Format an output filename based on an input filename.
         """
 
     

@@ -33,7 +33,7 @@ class TreeTableTab(Tab):
 
             collected_subplots.append(species.micro_plot_id)
 
-        if sorted(set(collected_subplots)) != sorted(set(range(1, 6))):
+        if set(collected_subplots) != set(range(1, 6)):
             validation_errors.append(MissingSubplotValidationError(self.get_object_type(), collected_subplots))
 
         return validation_errors

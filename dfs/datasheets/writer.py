@@ -40,7 +40,8 @@ class DatasheetWriter:
         seedling_tab = workbook.create_sheet(title=datasheet.TAB_NAME_SEEDLING)
         self.format_seedling_tab(sheet, seedling_tab)
 
-        workbook.save('{}/{}'.format(output_directory, sheet.input_filename.replace('Data', 'Data_Converted')))
+        # workbook.save('{}/{}'.format(output_directory, sheet.input_filename.replace('Data', 'Data_Converted')))
+        workbook.save('{}/{}'.format(output_directory, sheet.output_filename))
 
 
     def format_general_tab(self, sheet, tab):

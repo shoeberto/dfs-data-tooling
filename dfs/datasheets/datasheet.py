@@ -9,7 +9,6 @@ TAB_NAME_SEEDLING = 'Seedling_(0-1)'
 
 class Datasheet:
     def __init__(self):
-        self.input_filename = None
         self.tabs = {
             TAB_NAME_GENERAL: None,
             TAB_NAME_WITNESS_TREES: None,

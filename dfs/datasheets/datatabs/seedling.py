@@ -44,13 +44,18 @@ class SeedlingTable(Tab):
 
             collected_subplots.append(species.micro_plot_id)
 
-        if sorted(set(collected_subplots)) != sorted(set(range(1, 6))):
+        if set(collected_subplots) != set(range(1, 6)):
             validation_errors.append(MissingSubplotValidationError(self.get_object_type(), collected_subplots))
 
         return validation_errors
 
 
 class SeedlingSpecies(Species):
+    SEEDLING_SPECIES_OVERRIDES = {
+        'prvi': 'prsp'
+    }
+
+
     def __init__(self):
         super().__init__()
 
@@ -68,6 +73,15 @@ class SeedlingSpecies(Species):
         self.greater_five_feet_browsed = None
 
 
+    def get_species_known(self):
+        species = super().get_species_known()
+
+        if species in SeedlingSpecies.SEEDLING_SPECIES_OVERRIDES:
+            return SeedlingSpecies.SEEDLING_SPECIES_OVERRIDES[species]
+
+        return species
+
+
     def validate(self):
         validation_errors = []
 
@@ -78,7 +92,7 @@ class SeedlingSpecies(Species):
             validation_errors.append(FieldValidationError(self.get_object_type(), 'species known', 'seedling species', self.get_species_known()))
 
         if None != self.get_species_guess() and self.get_species_guess() not in Validatable.SEEDLING_SPECIES:
-            validation_errors.append(FieldValidationError(self.get_object_type(), 'species guess', 'seedling species', self.get_species_known()))
+            validation_errors.append(FieldValidationError(self.get_object_type(), 'species guess', 'seedling species', self.get_species_guess()))
 
         if self.micro_plot_id not in range(1, 6):
             validation_errors.append(FieldValidationError(self.get_object_type(), 'microplot ID', '1-5', self.micro_plot_id))

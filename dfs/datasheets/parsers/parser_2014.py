@@ -4,8 +4,8 @@ import dfs.datasheets.datasheet as datasheet
 
 
 class DatasheetParser2014(DatasheetParser):
-    def __init__(self):
-        super().__init__()
+    def format_output_filename(self, input_filename):
+        return input_filename.replace('Data', 'Data_Converted')
 
 
     def parse_plot_general_tab(self, workbook, sheet):

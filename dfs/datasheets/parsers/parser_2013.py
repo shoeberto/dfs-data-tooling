@@ -4,6 +4,10 @@ import dfs.datasheets.datasheet as datasheet
 
 
 class DatasheetParser2013(DatasheetParser):
+    def format_output_filename(self, input_filename):
+        return input_filename.replace('Data', 'Data_Converted')
+
+
     def parse_plot_general_tab(self, workbook, sheet):
         worksheet = workbook[datasheet.TAB_NAME_GENERAL]
         tab = datatabs.general.PlotGeneralTab()
