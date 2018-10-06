@@ -7,7 +7,7 @@ class Validatable(ABC):
     YES_NO_RESPONSE = ['Yes', 'No']
     YES_NO_TEXT = 'yes or no'
     SPECIES_OVERRIDES = {
-        'acps': 'acpe',
+        'acps': 'acsp',
         'acri': 'acru',
         'amar': 'amsp',
         'amel': 'amsp',

@@ -87,6 +87,8 @@ class GeneralTabSubplot(Validatable):
 
         self.latitude = None
         self.longitude = None
+        self.converted_latitude = None
+        self.converted_longitude = None
         self.micro_plot_id = None    # 1-5
         self.collected = None        # Yes/No
         self.fenced = None           # Yes/No
@@ -146,6 +148,17 @@ class PlotGeneralTabSubplot(GeneralTabSubplot):
 
         if None != self.disturbance and self.disturbance not in [0, 1]:
             validation_errors.append(FieldValidationError(self.get_object_type(), 'disturbance', '0-1', self.disturbance))
+
+        if 0 == self.disturbance and None == self.disturbance_type:
+            self.disturbance_type = 0
+
+        if None != self.disturbance and 0 < self.disturbance:
+            if None == self.disturbance_type:
+                self.disturbance_type = self.disturbance
+                self.disturbance = 1
+
+        if None != self.disturbance and None == self.disturbance_type:
+            validation_errors.append(FieldValidationError(self.get_object_type(), 'disturbance type', '1-4', self.disturbance_type))
 
         if None != self.disturbance_type:
             if None == self.disturbance_type or \

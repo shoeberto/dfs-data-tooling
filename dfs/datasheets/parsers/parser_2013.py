@@ -204,22 +204,22 @@ class DatasheetParser2013(DatasheetParser):
             species.species_known = worksheet['D{}'.format(i)].value
             species.species_guess = worksheet['E{}'.format(i)].value
             species.sprout = 0
-            species.zero_six_inches = worksheet['F{}'.format(i)].value
-            species.six_twelve_inches = worksheet['G{}'.format(i)].value
-            species.one_three_feet_total = worksheet['H{}'.format(i)].value
-            species.one_three_feet_browsed = worksheet['I{}'.format(i)].value
+            species.zero_six_inches = self.parse_int(worksheet['F{}'.format(i)].value)
+            species.six_twelve_inches = self.parse_int(worksheet['G{}'.format(i)].value)
+            species.one_three_feet_total = self.parse_int(worksheet['H{}'.format(i)].value)
+            species.one_three_feet_browsed = self.parse_int(worksheet['I{}'.format(i)].value)
 
             if species.one_three_feet_total and not species.one_three_feet_browsed:
                 species.one_three_feet_browsed = 0
 
-            species.three_five_feet_total = worksheet['J{}'.format(i)].value
-            species.three_five_feet_browsed = worksheet['K{}'.format(i)].value
+            species.three_five_feet_total = self.parse_int(worksheet['J{}'.format(i)].value)
+            species.three_five_feet_browsed = self.parse_int(worksheet['K{}'.format(i)].value)
 
             if species.three_five_feet_total and not species.three_five_feet_browsed:
                 species.three_five_feet_browsed = 0
 
-            species.greater_five_feet_total = worksheet['L{}'.format(i)].value
-            species.greater_five_feet_browsed = worksheet['M{}'.format(i)].value
+            species.greater_five_feet_total = self.parse_int(worksheet['L{}'.format(i)].value)
+            species.greater_five_feet_browsed = self.parse_int(worksheet['M{}'.format(i)].value)
 
             if species.greater_five_feet_total and not species.greater_five_feet_browsed:
                 species.greater_five_feet_browsed = 0

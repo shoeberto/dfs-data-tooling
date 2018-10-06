@@ -102,8 +102,16 @@ class DatasheetWriter:
             tab['F{}'.format(rownumber)] = subplot.azimuth
             tab['G{}'.format(rownumber)] = subplot.distance
             tab['H{}'.format(rownumber)] = subplot.altitude
-            tab['I{}'.format(rownumber)] = '=IF(ISBLANK(A{0}),"",LEFT((LEFT(A{0},2)+(RIGHT(A{0},LEN(A{0})-2)/60)),10))'.format(rownumber)
-            tab['J{}'.format(rownumber)] = '=IF(ISBLANK(B{0}),"",LEFT(-1*(LEFT(B{0},2)+(RIGHT(B{0},LEN(B{0})-2)/60)),10))'.format(rownumber)
+
+            if subplot.converted_latitude:
+                tab['I{}'.format(rownumber)] = subplot.converted_latitude
+            else:
+                tab['I{}'.format(rownumber)] = '=IF(ISBLANK(A{0}),"",LEFT((LEFT(A{0},2)+(RIGHT(A{0},LEN(A{0})-2)/60)),10))'.format(rownumber)
+
+            if subplot.converted_longitude:
+                tab['J{}'.format(rownumber)] = subplot.converted_longitude
+            else:
+                tab['J{}'.format(rownumber)] = '=IF(ISBLANK(B{0}),"",LEFT(-1*(LEFT(B{0},2)+(RIGHT(B{0},LEN(B{0})-2)/60)),10))'.format(rownumber)
 
             i += 1
 

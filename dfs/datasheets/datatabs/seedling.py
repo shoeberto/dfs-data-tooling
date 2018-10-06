@@ -128,6 +128,9 @@ class SeedlingSpecies(Species):
         if None != self.one_three_feet_browsed and 0 > self.one_three_feet_browsed:
             validation_errors.append(FieldValidationError(self.get_object_type(), "1-3' Browsed", '>= 0', self.one_three_feet_browsed))
 
+        if None == self.one_three_feet_total and None != self.one_three_feet_browsed:
+            validation_errors.append(FieldValidationError(self.get_object_type(), "1-3' Browsed", 'empty if Total is empty', self.one_three_feet_browsed))
+
         if None != self.one_three_feet_browsed and None != self.one_three_feet_total:
             if self.one_three_feet_browsed > self.one_three_feet_total:
                 validation_errors.append(FieldValidationError(self.get_object_type(), "1-3' Browsed'", "<= 1-3' Total", self.one_three_feet_browsed))
@@ -138,6 +141,9 @@ class SeedlingSpecies(Species):
         if None != self.three_five_feet_browsed and 0 > self.three_five_feet_browsed:
             validation_errors.append(FieldValidationError(self.get_object_type(), "3-5' Browsed", '>= 0', self.three_five_feet_browsed))
 
+        if None == self.three_five_feet_total and None != self.three_five_feet_browsed:
+            validation_errors.append(FieldValidationError(self.get_object_type(), "3-5' Browsed", 'empty if Total is empty', self.three_five_feet_browsed))
+
         if None != self.three_five_feet_browsed and None != self.three_five_feet_total:
             if self.three_five_feet_browsed > self.three_five_feet_total:
                 validation_errors.append(FieldValidationError(self.get_object_type(), "3-5' Browsed", "<= 3-5' Total", self.one_three_feet_browsed))
@@ -147,6 +153,9 @@ class SeedlingSpecies(Species):
 
         if None != self.greater_five_feet_browsed and 0 > self.greater_five_feet_browsed:
             validation_errors.append(FieldValidationError(self.get_object_type(), ">5' Browsed", '>= 0', self.greater_five_feet_browsed))
+
+        if None == self.greater_five_feet_total and None != self.greater_five_feet_browsed:
+            validation_errors.append(FieldValidationError(self.get_object_type(), ">5' Browsed", 'empty if Total is empty', self.three_five_feet_browsed))
 
         if None != self.greater_five_feet_browsed and None != self.greater_five_feet_total:
             if self.greater_five_feet_browsed > self.greater_five_feet_total:

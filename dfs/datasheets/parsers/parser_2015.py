@@ -17,13 +17,14 @@ class DatasheetParser2015(DatasheetParser):
         tab.deer_impact = self.parse_int(worksheet['B3'].value)
         tab.collection_date = worksheet['B4'].value
 
-        # TODO: what about lat/long at the top of file? D2/D3?
+        # ignore lat/lon at top of file
 
         # not recorded for 2015
         tab.fenced_subplot_condition = datatabs.general.FencedSubplotConditions()
 
+        collected_cover_subplots = self.get_collected_cover_subplots(workbook)
+
         for rownumber in range(27, 42):
-            # TODO: parsing lat/lon appears to produce incorrect results due to conversion formula at write time
             latitude = self.parse_float(worksheet[f'B{rownumber}'].value)
             longitude = self.parse_float(worksheet[f'C{rownumber}'].value)
 
@@ -34,23 +35,13 @@ class DatasheetParser2015(DatasheetParser):
             subplot.micro_plot_id = self.parse_int(worksheet['A{}'.format(rownumber)].value)
 
             # Ignore slope
-            subplot.latitude = latitude
-            subplot.longitude = longitude
+            subplot.converted_latitude = latitude
+            subplot.converted_longitude = longitude
 
-            # TODO: are either of these numbers?
-            subplot.disturbance = worksheet[f'D{rownumber}'].value
-            subplot.disturbance_type = worksheet[f'E{rownumber}'].value
+            subplot.disturbance = self.parse_int(worksheet[f'D{rownumber}'].value)
+            subplot.disturbance_type = self.parse_int(worksheet[f'E{rownumber}'].value)
 
-            # TODO: how to handle forested?
-            # forested_value = worksheet['D{}'.format(rownumber)].value
-            # if 1 == forested_value:
-            #     subplot.forested = 'Yes'
-            # elif 0 == forested_value:
-            #     subplot.forested = 'No'
-            # else:
-            #     pass
-                # TODO convert to error
-                # raise FieldValidationException('PlotGeneralTab', 'forested', '0 or 1', forested_value)
+            subplot.forested = 'Yes' if subplot.micro_plot_id in collected_cover_subplots else None
 
             tab.subplots.append(subplot)
 
@@ -60,7 +51,6 @@ class DatasheetParser2015(DatasheetParser):
 
                 non_forested_azimuth.micro_plot_id = self.parse_int(worksheet[f'A{rownumber}'].value)
 
-                # TODO: azimuth is int or float??
                 non_forested_azimuth.azimuth_1 = self.parse_int(worksheet[f'B{rownumber}'].value)
                 non_forested_azimuth.azimuth_2 = self.parse_int(worksheet[f'C{rownumber}'].value)
                 non_forested_azimuth.azimuth_3 = self.parse_int(worksheet[f'D{rownumber}'].value)
@@ -87,7 +77,6 @@ class DatasheetParser2015(DatasheetParser):
         for rownumber in range(8, 11):
             tree = datatabs.witnesstree.WitnessTreeTabTree()
 
-            # TODO: still at micro 1 in 2015?
             tree.micro_plot_id = 1
 
             tree.tree_number = self.parse_int(worksheet[f'A{rownumber}'].value[1])
@@ -97,7 +86,6 @@ class DatasheetParser2015(DatasheetParser):
 
             live_or_dead = self.parse_int(worksheet[f'E{rownumber}'].value)
 
-            # TODO: this logic is consistent?
             if None != live_or_dead:
                 tree.live_or_dead = 'L' if 1 == live_or_dead else 'D'
 
@@ -148,6 +136,26 @@ class DatasheetParser2015(DatasheetParser):
             i += 1
 
         return tab
+
+
+    def get_collected_cover_subplots(self, workbook):
+        subplots = []
+
+        worksheet = workbook[datasheet.TAB_NAME_COVER_TABLE]
+
+        row_valid = True
+        i = 3
+
+        while (row_valid):
+            if not worksheet['A{}'.format(i)].value:
+                row_valid = False
+                continue
+
+            subplots.append(self.parse_int(worksheet['A{}'.format(i)].value))
+
+            i = i + 1
+
+        return list(set(subplots))
 
 
     def parse_notes_tab(self, workbook, sheet):
@@ -230,22 +238,22 @@ class DatasheetParser2015(DatasheetParser):
             if None == species.sprout:
                 species.sprout = 0
 
-            species.zero_six_inches = worksheet['G{}'.format(i)].value
-            species.six_twelve_inches = worksheet['H{}'.format(i)].value
-            species.one_three_feet_total = worksheet['I{}'.format(i)].value
-            species.one_three_feet_browsed = worksheet['J{}'.format(i)].value
+            species.zero_six_inches = self.parse_int(worksheet['G{}'.format(i)].value)
+            species.six_twelve_inches = self.parse_int(worksheet['H{}'.format(i)].value)
+            species.one_three_feet_total = self.parse_int(worksheet['I{}'.format(i)].value)
+            species.one_three_feet_browsed = self.parse_int(worksheet['J{}'.format(i)].value)
 
             if species.one_three_feet_total and not species.one_three_feet_browsed:
                 species.one_three_feet_browsed = 0
 
-            species.three_five_feet_total = worksheet['K{}'.format(i)].value
-            species.three_five_feet_browsed = worksheet['L{}'.format(i)].value
+            species.three_five_feet_total = self.parse_int(worksheet['K{}'.format(i)].value)
+            species.three_five_feet_browsed = self.parse_int(worksheet['L{}'.format(i)].value)
 
             if species.three_five_feet_total and not species.three_five_feet_browsed:
                 species.three_five_feet_browsed = 0
 
-            species.greater_five_feet_total = worksheet['M{}'.format(i)].value
-            species.greater_five_feet_browsed = worksheet['N{}'.format(i)].value
+            species.greater_five_feet_total = self.parse_int(worksheet['M{}'.format(i)].value)
+            species.greater_five_feet_browsed = self.parse_int(worksheet['N{}'.format(i)].value)
 
             if species.greater_five_feet_total and not species.greater_five_feet_browsed:
                 species.greater_five_feet_browsed = 0
@@ -287,7 +295,6 @@ class DatasheetParser2015(DatasheetParser):
 
             live_or_dead = self.parse_int(worksheet['F{}'.format(i)].value)
 
-            # TODO: this logic is consistent?
             if None != live_or_dead:
                 species.live_or_dead = 'L' if 1 == live_or_dead else 'D'
 
