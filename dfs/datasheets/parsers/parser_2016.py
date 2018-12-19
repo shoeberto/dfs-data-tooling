@@ -4,8 +4,16 @@ import dfs.datasheets.datasheet as datasheet
 
 
 class DatasheetParser2016(DatasheetParser):
+    def format_output_filename(self, input_filename):
+        return input_filename.replace('Data', 'Data_Converted')
+
+
     def parse_plot_general_tab(self, workbook, sheet):
         worksheet = workbook[datasheet.TAB_NAME_GENERAL]
+
+        if worksheet['D2'].value == 'Plot Center GPS':
+            raise Exception('File does not conform to canonical input format.')
+
         tab = datatabs.general.PlotGeneralTab()
 
         tab.study_area = self.parse_int(worksheet['B1'].value)
@@ -13,8 +21,9 @@ class DatasheetParser2016(DatasheetParser):
         tab.deer_impact = self.parse_int(worksheet['B3'].value)
         tab.collection_date = worksheet['B4'].value
 
+        collected_cover_subplots = self.get_collected_cover_subplots(workbook)
 
-        for rownumber in range(8, 14):
+        for rownumber in range(8, 13):
             subplot = datatabs.general.PlotGeneralTabSubplot()
             subplot.micro_plot_id = self.parse_int(worksheet['A{}'.format(rownumber)].value)
 
@@ -24,15 +33,50 @@ class DatasheetParser2016(DatasheetParser):
 
             subplot.forested = worksheet['D{}'.format(rownumber)].value
 
-            # TODO: are either of these numbers?
+            if None == subplot.forested:
+                if subplot.micro_plot_id in collected_cover_subplots or (None != subplot.latitude or None != subplot.longitude):
+                    subplot.forested = 'Yes'
+                else:
+                    subplot.forested = 'No'
+
             subplot.disturbance = self.parse_int(worksheet[f'E{rownumber}'].value)
+
+            if None == subplot.disturbance:
+                subplot.disturbance = 0
+
             subplot.disturbance_type = self.parse_int(worksheet[f'F{rownumber}'].value)
+
+            if None == subplot.disturbance_type:
+                subplot.disturbance_type = 0
 
             subplot.collected = worksheet[f'G{rownumber}'].value
 
+            if None == subplot.collected:
+                if subplot.micro_plot_id in collected_cover_subplots:
+                    subplot.collected = 'Yes'
+                else:
+                    subplot.collected = 'No'
+
             subplot.fenced = worksheet[f'H{rownumber}'].value
 
+            if None == subplot.fenced:
+                if 5 == subplot.micro_plot_id and worksheet['A16'].value:
+                    subplot.fenced = 'Yes'
+                else:
+                    subplot.fenced = 'No'
+
             subplot.azimuth = self.parse_int(worksheet[f'I{rownumber}'].value)
+
+            if None == subplot.azimuth and subplot.collected:
+                if 2 == subplot.micro_plot_id:
+                    subplot.azimuth = 0
+                elif 3 == subplot.micro_plot_id:
+                    subplot.azimuth = 120
+                elif 4 == subplot.micro_plot_id:
+                    subplot.azimuth = 240
+                elif 5 == subplot.micro_plot_id:
+                    subplot.azimuth = 60
+
             subplot.altitude = self.parse_float(worksheet[f'J{rownumber}'].value)
 
             tab.subplots.append(subplot)
@@ -51,7 +95,6 @@ class DatasheetParser2016(DatasheetParser):
 
                 non_forested_azimuth.micro_plot_id = self.parse_int(worksheet[f'A{rownumber}'].value)
 
-                # TODO: azimuth is int or float??
                 non_forested_azimuth.azimuth_1 = self.parse_int(worksheet[f'B{rownumber}'].value)
                 non_forested_azimuth.azimuth_2 = self.parse_int(worksheet[f'C{rownumber}'].value)
                 non_forested_azimuth.azimuth_3 = self.parse_int(worksheet[f'D{rownumber}'].value)
@@ -63,6 +106,7 @@ class DatasheetParser2016(DatasheetParser):
 
                 auxillary_post_location.post = self.parse_int(worksheet[f'A{rownumber}'].value.replace('Post ', ''))
                 auxillary_post_location.micro_plot_id = self.parse_int(worksheet[f'B{rownumber}'].value)
+                auxillary_post_location.stake_type = worksheet[f'C{rownumber}'].value
                 auxillary_post_location.azimuth = self.parse_int(worksheet[f'D{rownumber}'].value)
                 auxillary_post_location.distance = self.parse_float(worksheet[f'E{rownumber}'].value)
 
@@ -91,11 +135,14 @@ class DatasheetParser2016(DatasheetParser):
             # TODO: this logic is consistent?
             if None != live_or_dead:
                 tree.live_or_dead = 'L' if 1 == live_or_dead else 'D'
+            else:
+                tree.live_or_dead = 'L'
 
             tree.azimuth = self.parse_int(worksheet[f'F{rownumber}'].value)
             tree.distance = self.parse_float(worksheet[f'G{rownumber}'].value)
 
-            tab.witness_trees.append(tree)
+            if None != tree.species_known:
+                tab.witness_trees.append(tree)
                         
         return tab
 
@@ -281,6 +328,8 @@ class DatasheetParser2016(DatasheetParser):
             # TODO: this logic is consistent?
             if None != live_or_dead:
                 species.live_or_dead = 'L' if 1 == live_or_dead else 'D'
+            else:
+                species.live_or_dead = 'L'
 
             species.comments = worksheet[f'G{i}'].value
 
@@ -290,3 +339,22 @@ class DatasheetParser2016(DatasheetParser):
 
         return tab
 
+
+    def get_collected_cover_subplots(self, workbook):
+        subplots = []
+
+        worksheet = workbook[datasheet.TAB_NAME_COVER_TABLE]
+
+        row_valid = True
+        i = 3
+
+        while (row_valid):
+            if not worksheet['A{}'.format(i)].value:
+                row_valid = False
+                continue
+
+            subplots.append(self.parse_int(worksheet['A{}'.format(i)].value))
+
+            i = i + 1
+
+        return list(set(subplots))

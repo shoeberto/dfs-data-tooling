@@ -11,6 +11,7 @@ class Validatable(ABC):
         'acri': 'acru',
         'amar': 'amsp',
         'amel': 'amsp',
+        'amsp*': 'amsp',
         'asca': 'acsa',
         'assp': 'aster',
         'beap': 'beal',
@@ -87,13 +88,14 @@ class Validatable(ABC):
 
 
     def validate_mutually_required_fields(self, fields):
-        field_none_values = {}
+        field_none_values = []
 
         for field in fields:
-            field_none_values[field] = (None == getattr(self, field))
+            if None == getattr(self, field):
+                field_none_values.append(field)
 
-        if 1 < len(set(field_none_values.values())):
-            return [RequiredFieldMismatchValidationError(self.get_object_type())]
+        if field_none_values:
+            return [RequiredFieldMismatchValidationError(self.get_object_type(), field_none_values)]
 
         return []
 
@@ -254,12 +256,13 @@ class DuplicateRowValidationError(ValidationError):
 
 
 class RequiredFieldMismatchValidationError(ValidationError):
-    def __init__(self, object_type):
+    def __init__(self, object_type, fields):
         self.object_type = object_type
+        self.fields = fields
 
 
     def get_message(self):
-        return 'In {}: mixture of empty and non-empty fields, where values are expected'.format(self.object_type)
+        return 'In {}: mixture of empty and non-empty fields, where values are expected (empty fields are: {})'.format(self.object_type, ', '.join(self.fields))
 
 
 class MissingSubplotValidationError(ValidationError):

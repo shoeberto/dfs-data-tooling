@@ -25,14 +25,17 @@ class WitnessTreeTab(Tab):
             validation_errors.append(FieldCountValidationError(self.get_object_type(), 'witness trees', 'at least 3', len(self.witness_trees)))
 
         for i in range(0, 3):
+            if i >= len(self.witness_trees):
+                continue
+
             if i + 1 != int(self.witness_trees[i].tree_number):
                 validation_errors.append(FieldValidationError(self.get_object_type(), 'witness tree number order', '1-3 contiguous numbering', self.witness_trees[i].tree_number))
 
         if 3 < len(self.witness_trees):
             for i in range(3, len(self.witness_trees)):
-                if 0 == i % 2 and 2 != int(self.witness_trees[i]):
+                if 0 == i % 2 and 2 != int(self.witness_trees[i].tree_number):
                     validation_errors.append(FieldValidationError(self.get_object_type(), 'witness tree number order', '1-2 contiguous numering', self.witness_trees[i].tree_number))
-                elif 1 == i % 2 and 1 != int(self.witness_trees[i]):
+                elif 1 == i % 2 and 1 != int(self.witness_trees[i].tree_number):
                     validation_errors.append(FieldValidationError(self.get_object_type(), 'witness tree number order', '1-2 contiguous numering', self.witness_trees[i].tree_number))
 
         for witness_tree in self.witness_trees:

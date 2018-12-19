@@ -14,6 +14,7 @@ altr,Cover,TRUE,FALSE,FALSE
 ambr,Cover,TRUE,FALSE,FALSE
 amsp,Cover/Tree/Seedling,TRUE,TRUE,TRUE
 apam,Cover,TRUE,FALSE,FALSE
+arhi,Cover,TRUE,FALSE,FALSE
 arnu,Cover,TRUE,FALSE,FALSE
 arsp,Cover,TRUE,FALSE,FALSE
 artr,Cover,TRUE,FALSE,FALSE
@@ -38,6 +39,7 @@ cadi,Cover,TRUE,FALSE,FALSE
 cagl,Tree/Seedling,TRUE,TRUE,TRUE
 caov,Tree/Seedling,TRUE,TRUE,TRUE
 capl,Cover,TRUE,FALSE,FALSE
+card,Cover,TRUE,FALSE,FALSE
 cardu,Cover,TRUE,FALSE,FALSE
 casp,Tree/Seedling,TRUE,TRUE,TRUE
 cath,Cover,TRUE,FALSE,FALSE
@@ -50,6 +52,7 @@ cial,Cover,TRUE,FALSE,FALSE
 cica,Cover,TRUE,FALSE,FALSE
 cisp,Cover,TRUE,FALSE,FALSE
 clca,Cover,TRUE,FALSE,FALSE
+clem,Cover,TRUE,FALSE,FALSE
 clvi,Cover,TRUE,FALSE,FALSE
 coal,Cover,TRUE,FALSE,FALSE
 cofl,Tree/Seedling,TRUE,TRUE,TRUE
@@ -98,6 +101,7 @@ gins,Cover,TRUE,FALSE,FALSE
 glhe,Cover,TRUE,FALSE,FALSE
 gosp,Cover,TRUE,FALSE,FALSE
 grass,Cover,TRUE,FALSE,FALSE
+hack,Cover,TRUE,FALSE,FALSE
 havi,Cover,TRUE,FALSE,FALSE
 heac,Cover,TRUE,FALSE,FALSE
 heno,Cover,TRUE,,
@@ -116,6 +120,7 @@ juci,Tree/Seedling,TRUE,TRUE,TRUE
 juef,Cover,TRUE,FALSE,FALSE
 kala,Cover,TRUE,FALSE,FALSE
 laca,Cover,TRUE,FALSE,FALSE
+libe,Cover,TRUE,FALSE,FALSE
 lisp,Cover,TRUE,FALSE,FALSE
 litu,Tree/Seedling,TRUE,TRUE,TRUE
 loma,Cover,TRUE,FALSE,FALSE
@@ -127,6 +132,7 @@ lysp1,Cover,TRUE,FALSE,FALSE
 lysp2,Cover,TRUE,FALSE,FALSE
 maac,Tree/Seedling,TRUE,TRUE,TRUE
 maca,Cover,TRUE,FALSE,FALSE
+malus,Tree/Seedling,FALSE,TRUE,TRUE
 mara,Cover,TRUE,FALSE,FALSE
 masp,Cover,TRUE,FALSE,FALSE
 meli,Cover,TRUE,FALSE,FALSE
@@ -146,6 +152,7 @@ onse,Cover,TRUE,FALSE,FALSE
 oscl,Cover,TRUE,FALSE,FALSE
 oscl2,Cover,TRUE,FALSE,FALSE
 oslo,Cover,TRUE,FALSE,FALSE
+ossp,Cover,TRUE,FALSE,FALSE
 osvi,Tree/Seedling,TRUE,TRUE,TRUE
 oxsp,Cover,TRUE,FALSE,FALSE
 paca,Cover,TRUE,FALSE,FALSE
@@ -188,6 +195,7 @@ prna,,,,
 prpe,Tree/Seedling,TRUE,TRUE,TRUE
 prse,Tree/Seedling,TRUE,TRUE,TRUE
 prsp,Tree/Seedling,TRUE,TRUE,TRUE
+prun,Cover,TRUE,FALSE,FALSE
 prvi,Cover,TRUE,FALSE,FALSE
 psme,Tree/Seedling,TRUE,TRUE,TRUE
 ptaq,Cover,TRUE,FALSE,FALSE
@@ -236,6 +244,7 @@ stsp,Cover,TRUE,FALSE,FALSE
 taof,Cover,TRUE,FALSE,FALSE
 thdi,Cover,TRUE,FALSE,FALSE
 thno,Cover,TRUE,FALSE,FALSE
+thth,Cover,TRUE,FALSE,FALSE
 tiam,Tree/Seedling,TRUE,TRUE,TRUE
 tico,Cover,TRUE,FALSE,FALSE
 tora,Cover,TRUE,FALSE,FALSE
@@ -283,6 +292,7 @@ uvsp,Cover,TRUE,FALSE,FALSE
 vapa,Cover,TRUE,FALSE,FALSE
 vasp,Cover,TRUE,FALSE,FALSE
 veof,Cover,TRUE,FALSE,FALSE
+vese,Cover,TRUE,FALSE,FALSE
 veth,Cover,TRUE,FALSE,FALSE
 vevi,Cover,TRUE,FALSE,FALSE
 viac,Cover,TRUE,FALSE,FALSE
@@ -294,3 +304,5 @@ vitis,Cover,TRUE,FALSE,FALSE
 vitr,Cover,TRUE,FALSE,FALSE
 wafr,Cover,TRUE,FALSE,FALSE
 water,Cover,TRUE,FALSE,FALSE
+ziau,Cover,TRUE,FALSE,FALSE
+zisp,Cover,TRUE,FALSE,FALSE

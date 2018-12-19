@@ -4,6 +4,23 @@ import dfs.datasheets.datasheet as datasheet
 
 
 class DatasheetParser2015(DatasheetParser):
+    SUBPLOT_FORESTED_OVERRIDES = {
+        116: { 2: False },
+        239: { 3: False, 4: False },
+        350: { 4: False },
+        311: { 4: True },
+        313: { 4: True },
+        317: { 2: True, 4: True, 5: True },
+        325: { 1: True, 3: True, 5: True },
+        338: { 3: True },
+        426: { 1: True, 3: True, 5: True },
+        428: { 3: False },
+        431: { 2: True, 4: True, 5: True },
+        436: { 3: True },
+        438: { 2: False }
+    }
+
+
     def format_output_filename(self, input_filename):
         return input_filename.replace('data', 'data_converted')
 
@@ -27,12 +44,13 @@ class DatasheetParser2015(DatasheetParser):
         for rownumber in range(27, 42):
             latitude = self.parse_float(worksheet[f'B{rownumber}'].value)
             longitude = self.parse_float(worksheet[f'C{rownumber}'].value)
+            micro_plot_id = self.parse_int(worksheet['A{}'.format(rownumber)].value)
 
-            if None == latitude or None == longitude:
+            if micro_plot_id > 5 and (None == latitude or None == longitude):
                 continue
 
             subplot = datatabs.general.PlotGeneralTabSubplot()
-            subplot.micro_plot_id = self.parse_int(worksheet['A{}'.format(rownumber)].value)
+            subplot.micro_plot_id = micro_plot_id
 
             # Ignore slope
             subplot.converted_latitude = latitude
@@ -42,6 +60,12 @@ class DatasheetParser2015(DatasheetParser):
             subplot.disturbance_type = self.parse_int(worksheet[f'E{rownumber}'].value)
 
             subplot.forested = 'Yes' if subplot.micro_plot_id in collected_cover_subplots else None
+
+            if None == subplot.forested:
+                plot_id = int(str(tab.study_area) + str(tab.plot_number))
+                if plot_id in DatasheetParser2015.SUBPLOT_FORESTED_OVERRIDES and subplot.micro_plot_id in DatasheetParser2015.SUBPLOT_FORESTED_OVERRIDES[plot_id]:
+                    subplot.forested = 'Yes' if DatasheetParser2015.SUBPLOT_FORESTED_OVERRIDES[plot_id][subplot.micro_plot_id] else 'No'
+
 
             tab.subplots.append(subplot)
 
@@ -117,7 +141,7 @@ class DatasheetParser2015(DatasheetParser):
             species.species_known = worksheet['D{}'.format(i)].value
             species.species_guess = worksheet['E{}'.format(i)].value
 
-            species.flower = self.parse_int(worksheet['I{}'.format(i)].value)
+            species.flower = self.parse_float(worksheet['I{}'.format(i)].value)
             species.number_of_stems = self.parse_int(worksheet['J{}'.format(i)].value)
 
             if species.species_known in datatabs.cover.CoverSpecies.DEER_INDICATOR_SPECIES:

@@ -14,6 +14,8 @@ def run(data_year, input_directory, output_directory):
         p = parsers.DatasheetParser2015()
     elif 2016 == int(data_year):
         p = parsers.DatasheetParser2016()
+    elif 2017 == int(data_year):
+        p = parsers.DatasheetParser2017()
     else:
         raise Exception(f'{data_year} is not a supported data year')
 

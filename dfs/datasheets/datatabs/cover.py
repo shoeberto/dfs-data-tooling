@@ -191,6 +191,12 @@ class CoverSpecies(Species):
         if self.species_known not in (CoverSpecies.HEIGHT_OPTIONAL_SPECIES + Tab.TREE_SPECIES) and self.average_height not in range(1, 6):
             validation_errors.append(FieldValidationError(self.get_object_type(), 'average height of species {}'.format(self.species_known), '1-5', self.average_height))
 
+        if None != self.flower:
+            if self.flower % 1 != 0:
+                validation_errors.append(FieldValidationError(self.get_object_type(), f'flower of species {self.species_known}', 'integer value', self.flower))
+
+            self.flower = int(self.flower)
+
         if self.species_known in CoverSpecies.DEER_INDICATOR_SPECIES:
             if None == self.count:
                 validation_errors.append(FieldValidationError(self.get_object_type(), 'count of species {}'.format(self.species_guess or self.species_known), 'non-empty', self.count))
