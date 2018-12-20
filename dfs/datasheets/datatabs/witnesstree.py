@@ -71,8 +71,8 @@ class WitnessTreeTabTree(Species):
         if int(self.tree_number) not in range(1, 4):
             validation_errors.append(FieldValidationError(self.get_object_type(), 'tree number', '1-3', self.tree_number))
 
-        if int(self.micro_plot_id) not in range(1, 6):
-            validation_errors.append(FieldValidationError(self.get_object_type(), 'micro plot ID', '1-5', self.micro_plot_id))
+        if self.micro_plot_id not in range(1, Validatable.MAX_MICRO_PLOT_ID + 1):
+            validation_errors.append(FieldValidationError(self.get_object_type(), 'micro plot ID', f'1-{Validatable.MAX_MICRO_PLOT_ID}', self.micro_plot_id))
 
         if None == self.species_known:
             validation_errors.append(FieldValidationError(self.get_object_type(), 'species known', 'non-empty', self.species_known))

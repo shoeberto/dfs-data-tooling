@@ -94,8 +94,8 @@ class SeedlingSpecies(Species):
         if None != self.get_species_guess() and self.get_species_guess() not in Validatable.SEEDLING_SPECIES:
             validation_errors.append(FieldValidationError(self.get_object_type(), 'species guess', 'seedling species', self.get_species_guess()))
 
-        if self.micro_plot_id not in range(1, 6):
-            validation_errors.append(FieldValidationError(self.get_object_type(), 'microplot ID', '1-5', self.micro_plot_id))
+        if self.micro_plot_id not in range(1, Validatable.MAX_MICRO_PLOT_ID + 1):
+            validation_errors.append(FieldValidationError(self.get_object_type(), 'microplot ID', f'1-{Validatable.MAX_MICRO_PLOT_ID}', self.micro_plot_id))
 
         if self.quarter not in range(1, 5):
             validation_errors.append(FieldValidationError(self.get_object_type(), 'quarter', '1-4', self.quarter))

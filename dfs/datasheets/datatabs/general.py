@@ -38,17 +38,17 @@ class GeneralTab(Tab):
             validation_errors.append(FieldValidationError(self.get_object_type(), 'collection date', 'a date', 'None'))
 
         if not self.subplots:
-            validation_errors.append(FieldCountValidationError('General Tab', 'subplots', 5, 'None'))
+            validation_errors.append(FieldCountValidationError('General Tab', 'subplots', Validatable.MAX_MICRO_PLOT_ID, 'None'))
         
-        if 5 != len(self.subplots):
-            validation_errors.append(FieldCountValidationError('General Tab', 'subplots', 5, len(self.subplots)))
+        if Validatable.MAX_MICRO_PLOT_ID != len(self.subplots):
+            validation_errors.append(FieldCountValidationError('General Tab', 'subplots', Validatable.MAX_MICRO_PLOT_ID, len(self.subplots)))
 
         micro_plot_id_list = []
         for subplot in self.subplots:
             validation_errors += subplot.validate()
             micro_plot_id_list.append(subplot.micro_plot_id)
 
-        if set(micro_plot_id_list) != set(range(1, 6)):
+        if set(micro_plot_id_list) != set(range(1, Validatable.MAX_MICRO_PLOT_ID + 1)):
             validation_errors.append(MissingSubplotValidationError(self.get_object_type(), micro_plot_id_list))
 
         last_post_number = None
@@ -101,8 +101,8 @@ class GeneralTabSubplot(Validatable):
     def validate(self):
         validation_errors = []
 
-        if self.micro_plot_id not in range(1, 6):
-            validation_errors.append(FieldValidationError(self.get_object_type(), 'microplot ID', '1-5', self.micro_plot_id))
+        if self.micro_plot_id not in range(1, Validatable.MAX_MICRO_PLOT_ID + 1):
+            validation_errors.append(FieldValidationError(self.get_object_type(), 'microplot ID', f'1-{Validatable.MAX_MICRO_PLOT_ID}', self.micro_plot_id))
 
         validation_errors += self.validate_mutually_required_fields(['collected', 'fenced', 'azimuth', 'distance'])
 
@@ -229,8 +229,8 @@ class AuxillaryPostLocation(Validatable):
         validation_errors = []
         validation_errors += self.validate_mutually_required_fields(['micro_plot_id', 'post', 'stake_type', 'azimuth', 'distance'])
 
-        if None != self.micro_plot_id and self.micro_plot_id not in range(1, 6):
-            validation_errors.append(FieldValidationError(self.get_object_type(), 'microplot ID', '1-5', self.micro_plot_id))
+        if None != self.micro_plot_id and self.micro_plot_id not in range(1, Validatable.MAX_MICRO_PLOT_ID + 1):
+            validation_errors.append(FieldValidationError(self.get_object_type(), 'microplot ID', f'1-{Validatable.MAX_MICRO_PLOT_ID}', self.micro_plot_id))
 
         if None != self.post and self.post not in [1, 2]:
             validation_errors.append(FieldValidationError(self.get_object_type(), 'post', '1 or 2', self.post))
@@ -262,8 +262,8 @@ class NonForestedAzimuths(Validatable):
         validation_errors = []
         validation_errors += self.validate_mutually_required_fields(['micro_plot_id', 'azimuth_1', 'azimuth_2', 'azimuth_3'])
 
-        if None != self.micro_plot_id and self.micro_plot_id not in range(1, 6):
-            validation_errors.append(FieldValidationError(self.get_object_type(), 'micro plot ID', '1-5', self.micro_plot_id))
+        if None != self.micro_plot_id and self.micro_plot_id not in range(1, Validatable.MAX_MICRO_PLOT_ID + 1):
+            validation_errors.append(FieldValidationError(self.get_object_type(), 'micro plot ID', f'1-{Validatable.MAX_MICRO_PLOT_ID}', self.micro_plot_id))
 
         if None != self.azimuth_1 and (self.azimuth_1 < 0 or self.azimuth_1 > 359):
             validation_errors.append(FieldValidationError(self.get_object_type(), 'azimuth 1', '0-359', self.azimuth_1))

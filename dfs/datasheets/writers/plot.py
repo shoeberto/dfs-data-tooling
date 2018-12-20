@@ -3,7 +3,7 @@ import dfs.datasheets.datasheet as datasheet
 import re
 
 
-class DatasheetWriter:
+class PlotDatasheetWriter:
     def write(self, sheet, output_directory):
         """
         Write a datasheet to an xlsx file.
@@ -13,7 +13,6 @@ class DatasheetWriter:
         output_directory -- the directory to write the new xlsx file to.
         """
 
-        # TODO: make this support treatment datasheets as well as plot datasheets
         workbook = Workbook()
 
         # remove the default worksheet

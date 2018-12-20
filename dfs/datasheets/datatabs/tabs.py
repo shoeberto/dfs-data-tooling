@@ -60,6 +60,8 @@ class Validatable(ABC):
 
     MASTER_SPECIES_LIST = None
 
+    MAX_MICRO_PLOT_ID = 5
+
 
     def __init__(self):
         if None == Validatable.MASTER_SPECIES_LIST:
