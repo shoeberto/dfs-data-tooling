@@ -11,11 +11,11 @@ class TreatmentDatasheetParser2014(DatasheetParser2017):
     def parse_plot_general_tab(self, workbook, sheet):
         worksheet = workbook[datasheet.TAB_NAME_GENERAL]
 
-        tab = datatabs.general.PlotGeneralTab()
+        tab = datatabs.general.GeneralTab()
 
         tab.study_area = self.parse_int(worksheet['B1'].value)
         tab.plot_number = self.parse_int(worksheet['B2'].value)
-        tab.deer_impact = self.parse_int(worksheet['B3'].value)
+        tab.deer_impact = self.parse_int(workbook[datasheet.TAB_NAME_NOTES]['C3'].value)
         tab.collection_date = worksheet['B4'].value
 
         for rownumber in range(9, 24):

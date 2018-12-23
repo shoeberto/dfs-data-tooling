@@ -1,4 +1,5 @@
 import sys
+import os.path
 import argparse
 import glob
 from os.path import basename
@@ -54,6 +55,12 @@ def get_parser(data_type, data_year):
     elif 'treatment' == data_type:
         if 2014 == data_year:
             p = parsers.treatments.TreatmentDatasheetParser2014()
+        elif 2015 == data_year:
+            p = parsers.treatments.TreatmentDatasheetParser2015()
+        elif 2016 == data_year:
+            p = parsers.treatments.TreatmentDatasheetParser2016()
+        elif 2017 == data_year:
+            p = parsers.treatments.TreatmentDatasheetParser2017()
         else:
             raise Exception(f'{data_year} is not a supported data year')
     elif 'superplot' == data_type:
@@ -80,6 +87,14 @@ parser.add_argument('-y', '--year', type=int, help='Data year.', required=True)
 parser.add_argument('-t', '--data-type', help='Data type.', choices=['plot', 'treatment', 'superplot'], default='plot')
 
 args = parser.parse_args()
+
+if not os.path.isdir(args.input_directory):
+    raise Exception(f"'{args.input_directory}' is not a directory")
+
+if not os.path.exists(args.output_directory):
+    os.makedirs(args.output_directory)
+elif not os.path.isdir(args.output_directory):
+    raise Exception(f"'{args.output_directory}' is not a valid output directory")
 
 if '__main__' == __name__:
     run(args.year, args.input_directory, args.output_directory, args.data_type)

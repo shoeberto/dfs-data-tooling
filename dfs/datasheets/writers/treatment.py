@@ -1,9 +1,10 @@
 from openpyxl import Workbook
+from dfs.datasheets.writers.plot import PlotDatasheetWriter
 import dfs.datasheets.datasheet as datasheet
 import re
 
 
-class TreatmentDatasheetWriter:
+class TreatmentDatasheetWriter(PlotDatasheetWriter):
     def format_general_tab(self, sheet, tab):
         tab['A1'] = 'Study Area'
         tab['B1'] = int(sheet.tabs[datasheet.TAB_NAME_GENERAL].study_area)
@@ -42,7 +43,6 @@ class TreatmentDatasheetWriter:
         tab['J8'] = 'Notes'
         tab['K8'] = 'Latitude'
         tab['L8'] = 'Longitude'
-        tab['M8'] = 'UID'
 
         i = 0
         for rownumber in range(9, 24):
@@ -53,6 +53,7 @@ class TreatmentDatasheetWriter:
 
             tab['A{}'.format(rownumber)] = subplot.latitude
             tab['B{}'.format(rownumber)] = subplot.longitude
+
             tab['C{}'.format(rownumber)] = int(subplot.micro_plot_id)
 
             if None == subplot.collected:
@@ -78,9 +79,6 @@ class TreatmentDatasheetWriter:
                 tab['L{}'.format(rownumber)] = subplot.converted_longitude
             else:
                 tab['L{}'.format(rownumber)] = '=IF(ISBLANK(B{0}),"",LEFT(-1*(LEFT(B{0},2)+(RIGHT(B{0},LEN(B{0})-2)/60)),10))'.format(rownumber)
-
-            # TODO - what did we do about UIDs? we ditched them right?
-            tab[f'M{rownumber}'] = '=VALUE(CONCATENATE($General.$B$1,IF(LEN($General.$B$2)<2, CONCATENATE(0,$General.$B$2),$General.$B$2),IF(LEN(C9)<2, CONCATENATE(0,C9),C9)))'
 
             i += 1
 
@@ -153,21 +151,13 @@ class TreatmentDatasheetWriter:
         tab['G2'] = 'Azimuth'
         tab['H2'] = 'Distance'
 
-        # TODO this is wrong
-        default_tree_number = 1
         i = 0
 
         for rownumber in range(3, 33):
-            tab['A{}'.format(rownumber)] = default_tree_number
-
-            if 0 == rownumber % 2:
-                default_tree_number += 1
-            else:
-                default_tree_number = 1
-
             if i < len(sheet.tabs[datasheet.TAB_NAME_WITNESS_TREES].witness_trees):
                 tree = sheet.tabs[datasheet.TAB_NAME_WITNESS_TREES].witness_trees[i]
 
+                tab['A{}'.format(rownumber)] = tree.tree_number
                 tab['B{}'.format(rownumber)] = tree.micro_plot_id
                 tab['C{}'.format(rownumber)] = tree.species_known
                 tab['D{}'.format(rownumber)] = tree.species_guess
@@ -176,6 +166,7 @@ class TreatmentDatasheetWriter:
                 tab['G{}'.format(rownumber)] = tree.azimuth
                 tab['H{}'.format(rownumber)] = tree.distance
             else:
+                tab['A{}'.format(rownumber)] = ''
                 tab['B{}'.format(rownumber)] = ''
                 tab['C{}'.format(rownumber)] = ''
                 tab['D{}'.format(rownumber)] = ''

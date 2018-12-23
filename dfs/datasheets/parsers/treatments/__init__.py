@@ -1,1 +1,4 @@
 from dfs.datasheets.parsers.treatments.parser_2014 import TreatmentDatasheetParser2014
+from dfs.datasheets.parsers.treatments.parser_2015 import TreatmentDatasheetParser2015
+from dfs.datasheets.parsers.treatments.parser_2016 import TreatmentDatasheetParser2016
+from dfs.datasheets.parsers.treatments.parser_2017 import TreatmentDatasheetParser2017

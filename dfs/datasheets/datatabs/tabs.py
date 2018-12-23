@@ -269,8 +269,8 @@ class RequiredFieldMismatchValidationError(ValidationError):
 
 class MissingSubplotValidationError(ValidationError):
     def __init__(self, object_type, collected_subplots):
-        self.object_type =  object_type
-        self.missing_subplots = [str(x) for x in (set(range(1, 6)) - set(collected_subplots))]
+        self.object_type = object_type
+        self.missing_subplots = [str(x) for x in (set(range(1, Validatable.MAX_MICRO_PLOT_ID + 1)) - set(collected_subplots))]
 
     
     def get_message(self):

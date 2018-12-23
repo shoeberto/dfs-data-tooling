@@ -75,7 +75,7 @@ class CoverTableTab(Tab):
 
             collected_subplots.append(species.micro_plot_id)
 
-        if set(collected_subplots) != set(range(1, 6)):
+        if set(collected_subplots) != set(range(1, Validatable.MAX_MICRO_PLOT_ID + 1)):
             validation_errors.append(MissingSubplotValidationError(self.get_object_type(), collected_subplots))
 
         return validation_errors

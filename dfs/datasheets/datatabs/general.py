@@ -85,6 +85,7 @@ class GeneralTabSubplot(Validatable):
     def __init__(self):
         super().__init__()
 
+        self.re_monumented = None    # Yes/No
         self.latitude = None
         self.longitude = None
         self.converted_latitude = None
@@ -109,6 +110,9 @@ class GeneralTabSubplot(Validatable):
         if None != self.collected and self.collected not in self.YES_NO_RESPONSE:
             validation_errors.append(FieldValidationError(self.get_object_type(), 'collected', self.YES_NO_TEXT, self.collected))
 
+        if None != self.re_monumented and self.re_monumented not in self.YES_NO_RESPONSE:
+            validation_errors.append(FieldValidationError(self.get_object_type(), 'remonumented', self.YES_NO_TEXT, self.re_monumented))
+
         if None != self.fenced and self.fenced not in self.YES_NO_RESPONSE:
             validation_errors.append(FieldValidationError(self.get_object_type(), 'fenced', self.YES_NO_TEXT, self.fenced))
 
@@ -125,7 +129,6 @@ class PlotGeneralTabSubplot(GeneralTabSubplot):
     def __init__(self):
         super().__init__()
 
-        self.re_monumented = None    # Yes/No
         self.forested = None         # Yes/No
         self.disturbance = None      # 0-1
         self.disturbance_type = None # 0-4; if disturbance = 0, must be 0; if disturbance = 1, must be 1-4
@@ -138,10 +141,7 @@ class PlotGeneralTabSubplot(GeneralTabSubplot):
 
         validation_errors += super().validate()
 
-        validation_errors += self.validate_mutually_required_fields(['re_monumented', 'disturbance', 'disturbance_type', 'lime', 'herbicide'])
-
-        if None != self.re_monumented and self.re_monumented not in self.YES_NO_RESPONSE:
-            validation_errors.append(FieldValidationError(self.get_object_type(), 'remonumented', self.YES_NO_TEXT, self.re_monumented))
+        validation_errors += self.validate_mutually_required_fields(['disturbance', 'disturbance_type', 'lime', 'herbicide'])
 
         if self.forested not in self.YES_NO_RESPONSE:
             validation_errors.append(FieldValidationError(self.get_object_type(), 'forested', self.YES_NO_TEXT, self.forested))
