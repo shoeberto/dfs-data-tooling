@@ -41,13 +41,13 @@ class NotesTab(Tab):
     def validate_deer_impact(self, field):
         validation_errors = []
         impact_rating = getattr(self, field)
-        impact_notes = getattr(self, '{}_notes'.format(field))
+        impact_notes = getattr(self, f'{field}_notes')
         
         if None != impact_rating:
             if 0 > impact_rating or 5 < impact_rating:
-                validation_errors.append(FieldValidationError(self.get_object_type(), '{} impact rating'.format(field), '0-5', impact_rating))
+                validation_errors.append(FieldValidationError(self.get_object_type(), f'{field} impact rating', '0-5', impact_rating))
 
             if None == impact_notes:
-                validation_errors.append(FieldValidationError(self.get_object_type(), '{} impact notes'.format(field), 'non-empy', impact_notes))
+                validation_errors.append(FieldValidationError(self.get_object_type(), f'{field} impact notes', 'non-empy', impact_notes))
 
         return validation_errors

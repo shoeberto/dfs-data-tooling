@@ -33,7 +33,7 @@ class SuperplotDatasheetParser2015(DatasheetParser2015):
     def validate_workbook(self, workbook, filepath):
         for t in ['general', 'deerimpact', 'tree', 'cover', 'sapling', 'seedling']:
             if t not in workbook:
-                raise Exception("Missing required worksheet '{}' in file '{}'".format(t, filepath))
+                raise Exception(f"Missing required worksheet '{t}' in file '{filepath}'")
 
 
     def parse_plot_general_tab(self, workbook, sheet):
@@ -155,17 +155,17 @@ class SuperplotDatasheetParser2015(DatasheetParser2015):
         i = 2
 
         while (row_valid):
-            if not worksheet['A{}'.format(i)].value:
+            if not worksheet[f'A{i}'].value:
                 row_valid = False
                 continue
 
             species = datatabs.cover.CoverSpecies()
 
-            species.micro_plot_id = self.parse_int(worksheet['A{}'.format(i)].value)
-            species.quarter = self.parse_int(worksheet['B{}'.format(i)].value)
-            species.scale = self.parse_int(worksheet['C{}'.format(i)].value)
-            species.species_known = worksheet['D{}'.format(i)].value
-            species.species_guess = worksheet['E{}'.format(i)].value
+            species.micro_plot_id = self.parse_int(worksheet[f'A{i}'].value)
+            species.quarter = self.parse_int(worksheet[f'B{i}'].value)
+            species.scale = self.parse_int(worksheet[f'C{i}'].value)
+            species.species_known = worksheet[f'D{i}'].value
+            species.species_guess = worksheet[f'E{i}'].value
 
             if '' == species.species_known:
                 species.species_known = None
@@ -173,16 +173,16 @@ class SuperplotDatasheetParser2015(DatasheetParser2015):
             if '' == species.species_guess:
                 species.species_guess = None
 
-            species.flower = self.parse_float(worksheet['I{}'.format(i)].value)
-            species.number_of_stems = self.parse_int(worksheet['J{}'.format(i)].value)
+            species.flower = self.parse_float(worksheet[f'I{i}'].value)
+            species.number_of_stems = self.parse_int(worksheet[f'J{i}'].value)
 
             if species.species_known in datatabs.cover.CoverSpecies.DEER_INDICATOR_SPECIES:
                 if None == species.flower:
                     species.flower = 0
 
-            species.percent_cover = self.parse_int(worksheet['F{}'.format(i)].value)
-            species.average_height = self.parse_int(worksheet['G{}'.format(i)].value)
-            species.count = self.parse_int(worksheet['H{}'.format(i)].value)
+            species.percent_cover = self.parse_int(worksheet[f'F{i}'].value)
+            species.average_height = self.parse_int(worksheet[f'G{i}'].value)
+            species.count = self.parse_int(worksheet[f'H{i}'].value)
 
             if species.count and (not species.flower) and species.override_species(species.species_known) in datatabs.cover.CoverSpecies.DEER_INDICATOR_SPECIES:
                 species.flower = 0
@@ -203,11 +203,11 @@ class SuperplotDatasheetParser2015(DatasheetParser2015):
         i = 2
 
         while (row_valid):
-            if not worksheet['A{}'.format(i)].value:
+            if not worksheet[f'A{i}'].value:
                 row_valid = False
                 continue
 
-            subplots.append(self.parse_int(worksheet['A{}'.format(i)].value))
+            subplots.append(self.parse_int(worksheet[f'A{i}'].value))
 
             i = i + 1
 
@@ -242,13 +242,13 @@ class SuperplotDatasheetParser2015(DatasheetParser2015):
         subplot_sapling_numbers = {}
 
         while (row_valid):
-            if not worksheet['A{}'.format(i)].value:
+            if not worksheet[f'A{i}'].value:
                 row_valid = False
                 continue
 
             species = datatabs.sapling.SaplingSpecies()
 
-            species.micro_plot_id = self.parse_int(worksheet['A{}'.format(i)].value)
+            species.micro_plot_id = self.parse_int(worksheet[f'A{i}'].value)
 
             if species.micro_plot_id not in subplot_sapling_numbers:
                 subplot_sapling_numbers[species.micro_plot_id] = 1
@@ -256,10 +256,10 @@ class SuperplotDatasheetParser2015(DatasheetParser2015):
                 subplot_sapling_numbers[species.micro_plot_id] += 1
 
             species.sapling_number = subplot_sapling_numbers[species.micro_plot_id]
-            species.quarter = self.parse_int(worksheet['B{}'.format(i)].value)
-            species.scale = self.parse_int(worksheet['C{}'.format(i)].value)
-            species.species_known = worksheet['D{}'.format(i)].value
-            species.species_guess = worksheet['E{}'.format(i)].value
+            species.quarter = self.parse_int(worksheet[f'B{i}'].value)
+            species.scale = self.parse_int(worksheet[f'C{i}'].value)
+            species.species_known = worksheet[f'D{i}'].value
+            species.species_guess = worksheet[f'E{i}'].value
 
             if '' == species.species_known:
                 species.species_known = None
@@ -267,7 +267,7 @@ class SuperplotDatasheetParser2015(DatasheetParser2015):
             if '' == species.species_guess:
                 species.species_guess = None
 
-            species.diameter_breast_height = self.parse_float(worksheet['F{}'.format(i)].value)
+            species.diameter_breast_height = self.parse_float(worksheet[f'F{i}'].value)
 
             tab.sapling_species.append(species)
 
@@ -284,18 +284,18 @@ class SuperplotDatasheetParser2015(DatasheetParser2015):
         i = 2
 
         while (row_valid):
-            if not worksheet['A{}'.format(i)].value:
+            if not worksheet[f'A{i}'].value:
                 row_valid = False
                 continue
 
             species = datatabs.seedling.SeedlingSpecies()
 
-            species.micro_plot_id = worksheet['A{}'.format(i)].value
+            species.micro_plot_id = worksheet[f'A{i}'].value
 
-            species.quarter = self.parse_int(worksheet['B{}'.format(i)].value)
-            species.scale = self.parse_int(worksheet['C{}'.format(i)].value)
-            species.species_known = worksheet['D{}'.format(i)].value
-            species.species_guess = worksheet['E{}'.format(i)].value
+            species.quarter = self.parse_int(worksheet[f'B{i}'].value)
+            species.scale = self.parse_int(worksheet[f'C{i}'].value)
+            species.species_known = worksheet[f'D{i}'].value
+            species.species_guess = worksheet[f'E{i}'].value
 
             if '' == species.species_known:
                 species.species_known = None
@@ -308,22 +308,22 @@ class SuperplotDatasheetParser2015(DatasheetParser2015):
             if None == species.sprout:
                 species.sprout = 0
 
-            species.zero_six_inches = self.parse_int(worksheet['G{}'.format(i)].value)
-            species.six_twelve_inches = self.parse_int(worksheet['H{}'.format(i)].value)
-            species.one_three_feet_total = self.parse_int(worksheet['I{}'.format(i)].value)
-            species.one_three_feet_browsed = self.parse_int(worksheet['J{}'.format(i)].value)
+            species.zero_six_inches = self.parse_int(worksheet[f'G{i}'].value)
+            species.six_twelve_inches = self.parse_int(worksheet[f'H{i}'].value)
+            species.one_three_feet_total = self.parse_int(worksheet[f'I{i}'].value)
+            species.one_three_feet_browsed = self.parse_int(worksheet[f'J{i}'].value)
 
             if species.one_three_feet_total and not species.one_three_feet_browsed:
                 species.one_three_feet_browsed = 0
 
-            species.three_five_feet_total = self.parse_int(worksheet['K{}'.format(i)].value)
-            species.three_five_feet_browsed = self.parse_int(worksheet['L{}'.format(i)].value)
+            species.three_five_feet_total = self.parse_int(worksheet[f'K{i}'].value)
+            species.three_five_feet_browsed = self.parse_int(worksheet[f'L{i}'].value)
 
             if species.three_five_feet_total and not species.three_five_feet_browsed:
                 species.three_five_feet_browsed = 0
 
-            species.greater_five_feet_total = self.parse_int(worksheet['M{}'.format(i)].value)
-            species.greater_five_feet_browsed = self.parse_int(worksheet['N{}'.format(i)].value)
+            species.greater_five_feet_total = self.parse_int(worksheet[f'M{i}'].value)
+            species.greater_five_feet_browsed = self.parse_int(worksheet[f'N{i}'].value)
 
             if species.greater_five_feet_total and not species.greater_five_feet_browsed:
                 species.greater_five_feet_browsed = 0
@@ -345,13 +345,13 @@ class SuperplotDatasheetParser2015(DatasheetParser2015):
         subplot_tree_numbers = {}
 
         while (row_valid):
-            if not worksheet['A{}'.format(i)].value:
+            if not worksheet[f'A{i}'].value:
                 row_valid = False
                 continue
 
             species = datatabs.tree.TreeTableSpecies()
 
-            species.micro_plot_id = worksheet['A{}'.format(i)].value
+            species.micro_plot_id = worksheet[f'A{i}'].value
 
             if species.micro_plot_id not in subplot_tree_numbers:
                 subplot_tree_numbers[species.micro_plot_id] = 1
@@ -359,8 +359,8 @@ class SuperplotDatasheetParser2015(DatasheetParser2015):
                 subplot_tree_numbers[species.micro_plot_id] += 1
 
             species.tree_number = subplot_tree_numbers[species.micro_plot_id]
-            species.species_known = worksheet['C{}'.format(i)].value
-            species.species_guess = worksheet['D{}'.format(i)].value
+            species.species_known = worksheet[f'C{i}'].value
+            species.species_guess = worksheet[f'D{i}'].value
 
             if '' == species.species_known:
                 species.species_known = None
@@ -368,9 +368,9 @@ class SuperplotDatasheetParser2015(DatasheetParser2015):
             if '' == species.species_guess:
                 species.species_guess = None
 
-            species.diameter_breast_height = self.parse_float(worksheet['E{}'.format(i)].value)
+            species.diameter_breast_height = self.parse_float(worksheet[f'E{i}'].value)
 
-            live_or_dead = worksheet['F{}'.format(i)].value
+            live_or_dead = worksheet[f'F{i}'].value
             if None != live_or_dead and live_or_dead.lower() in ['l', 'd']:
                 species.live_or_dead = live_or_dead.upper()
             else:

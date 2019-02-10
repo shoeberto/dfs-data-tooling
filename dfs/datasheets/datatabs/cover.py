@@ -32,12 +32,7 @@ class CoverTableTab(Tab):
                     three_hundredth_species.fill_empty_values_from_cover_species(milacre_species)
 
             if not milacre_species_in_three_hundredth and milacre_species not in Tab.TREE_SPECIES:
-                print('Copying species {},{},{},{} from milacre to 300th acre.'.format(
-                    milacre_species.micro_plot_id,
-                    milacre_species.quarter,
-                    milacre_species.scale,
-                    milacre_species.get_species_known()
-                ))
+                print(f'Copying species {milacre_species.micro_plot_id},{milacre_species.quarter},{milacre_species.scale},{milacre_species.get_species_known()} from milacre to 300th acre.')
 
                 species = CoverSpecies()
                 species.micro_plot_id = milacre_species.micro_plot_id
@@ -143,7 +138,7 @@ class CoverSpecies(Species):
             if species.lower() in CoverSpecies.COVER_SPECIES_OVERRIDES:
                 return CoverSpecies.COVER_SPECIES_OVERRIDES[species.lower()]
         except Exception:
-            raise Exception("Cannot parse species code '{}'".format(species))
+            raise Exception(f"Cannot parse species code '{species}'")
 
         return super().override_species(species)
 
@@ -186,10 +181,10 @@ class CoverSpecies(Species):
             validation_errors.append(FieldValidationError(self.get_object_type(), 'species guess', 'cover species', self.get_species_guess()))
 
         if self.percent_cover not in range(0, 10):
-            validation_errors.append(FieldValidationError(self.get_object_type(), 'percent cover of species {}'.format(self.species_known), '0-9', self.percent_cover))
+            validation_errors.append(FieldValidationError(self.get_object_type(), f'percent cover of species {self.species_known}', '0-9', self.percent_cover))
 
         if self.species_known not in (CoverSpecies.HEIGHT_OPTIONAL_SPECIES + Tab.TREE_SPECIES) and self.average_height not in range(1, 6):
-            validation_errors.append(FieldValidationError(self.get_object_type(), 'average height of species {}'.format(self.species_known), '1-5', self.average_height))
+            validation_errors.append(FieldValidationError(self.get_object_type(), f'average height of species {self.species_known}', '1-5', self.average_height))
 
         if None != self.flower:
             if self.flower % 1 != 0:

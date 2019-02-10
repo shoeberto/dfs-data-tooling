@@ -11,7 +11,7 @@ class SuperplotDatasheetParser2014(DatasheetParser2014):
     def validate_workbook(self, workbook, filepath):
         for t in [datasheet.TAB_NAME_GENERAL, datasheet.TAB_NAME_TREE_TABLE, datasheet.TAB_NAME_COVER_TABLE, datasheet.TAB_NAME_SAPLING, datasheet.TAB_NAME_SEEDLING]:
             if t not in workbook:
-                raise Exception("Missing required worksheet '{}' in file '{}'".format(t, filepath))
+                raise Exception(f"Missing required worksheet '{t}' in file '{filepath}'")
 
 
     def parse_plot_general_tab(self, workbook, sheet):

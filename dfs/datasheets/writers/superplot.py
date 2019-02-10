@@ -66,10 +66,10 @@ class SuperplotDatasheetWriter(PlotDatasheetWriter):
 
             subplot = sheet.tabs[datasheet.TAB_NAME_GENERAL].subplots[i]
 
-            tab['A{}'.format(rownumber)] = subplot.latitude
-            tab['B{}'.format(rownumber)] = subplot.longitude
+            tab[f'A{rownumber}'] = subplot.latitude
+            tab[f'B{rownumber}'] = subplot.longitude
 
-            tab['C{}'.format(rownumber)] = int(subplot.micro_plot_id)
+            tab[f'C{rownumber}'] = int(subplot.micro_plot_id)
 
             override_collected = 'Yes'
 
@@ -81,21 +81,21 @@ class SuperplotDatasheetWriter(PlotDatasheetWriter):
             if override_collected != subplot.collected:
                 print(f'Warning: value of collected at subplot {subplot.micro_plot_id} does not match the actual collection data and will be overridden.')
 
-            tab['D{}'.format(rownumber)] = override_collected
-            tab['E{}'.format(rownumber)] = subplot.fenced
-            tab['F{}'.format(rownumber)] = subplot.azimuth
-            tab['G{}'.format(rownumber)] = subplot.distance
-            tab['H{}'.format(rownumber)] = subplot.altitude
+            tab[f'D{rownumber}'] = override_collected
+            tab[f'E{rownumber}'] = subplot.fenced
+            tab[f'F{rownumber}'] = subplot.azimuth
+            tab[f'G{rownumber}'] = subplot.distance
+            tab[f'H{rownumber}'] = subplot.altitude
 
             if subplot.converted_latitude:
-                tab['I{}'.format(rownumber)] = subplot.converted_latitude
+                tab[f'I{rownumber}'] = subplot.converted_latitude
             else:
-                tab['I{}'.format(rownumber)] = '=IF(ISBLANK(A{0}),"",LEFT((LEFT(A{0},2)+(RIGHT(A{0},LEN(A{0})-2)/60)),10))'.format(rownumber)
+                tab[f'I{rownumber}'] = '=IF(ISBLANK(A{0}),"",LEFT((LEFT(A{0},2)+(RIGHT(A{0},LEN(A{0})-2)/60)),10))'.format(rownumber)
 
             if subplot.converted_longitude:
-                tab['J{}'.format(rownumber)] = subplot.converted_longitude
+                tab[f'J{rownumber}'] = subplot.converted_longitude
             else:
-                tab['J{}'.format(rownumber)] = '=IF(ISBLANK(B{0}),"",LEFT(-1*(LEFT(B{0},2)+(RIGHT(B{0},LEN(B{0})-2)/60)),10))'.format(rownumber)
+                tab[f'J{rownumber}'] = '=IF(ISBLANK(B{0}),"",LEFT(-1*(LEFT(B{0},2)+(RIGHT(B{0},LEN(B{0})-2)/60)),10))'.format(rownumber)
 
             offset_index = rownumber + 14
 
@@ -155,17 +155,17 @@ class SuperplotDatasheetWriter(PlotDatasheetWriter):
             if i < len(sheet.tabs[datasheet.TAB_NAME_GENERAL].auxillary_post_locations):
                 auxillary_post_location = sheet.tabs[datasheet.TAB_NAME_GENERAL].auxillary_post_locations[i]
 
-                tab['A{}'.format(rownumber)] = auxillary_post_location.micro_plot_id
-                tab['B{}'.format(rownumber)] = auxillary_post_location.post
-                tab['C{}'.format(rownumber)] = auxillary_post_location.stake_type
-                tab['D{}'.format(rownumber)] = auxillary_post_location.azimuth
-                tab['E{}'.format(rownumber)] = auxillary_post_location.distance
+                tab[f'A{rownumber}'] = auxillary_post_location.micro_plot_id
+                tab[f'B{rownumber}'] = auxillary_post_location.post
+                tab[f'C{rownumber}'] = auxillary_post_location.stake_type
+                tab[f'D{rownumber}'] = auxillary_post_location.azimuth
+                tab[f'E{rownumber}'] = auxillary_post_location.distance
             else:
-                tab['A{}'.format(rownumber)] = ''
-                tab['B{}'.format(rownumber)] = ''
-                tab['C{}'.format(rownumber)] = ''
-                tab['D{}'.format(rownumber)] = ''
-                tab['E{}'.format(rownumber)] = ''
+                tab[f'A{rownumber}'] = ''
+                tab[f'B{rownumber}'] = ''
+                tab[f'C{rownumber}'] = ''
+                tab[f'D{rownumber}'] = ''
+                tab[f'E{rownumber}'] = ''
 
             i += 1
 
@@ -182,12 +182,12 @@ class SuperplotDatasheetWriter(PlotDatasheetWriter):
             if i < len(sheet.tabs[datasheet.TAB_NAME_GENERAL].non_forested_azimuths):
                 non_forested_azimuth = sheet.tabs[datasheet.TAB_NAME_GENERAL].non_forested_azimuths[i]
 
-                tab['A{}'.format(rownumber)] = non_forested_azimuth.micro_plot_id
-                tab['B{}'.format(rownumber)] = non_forested_azimuth.azimuth_1
-                tab['C{}'.format(rownumber)] = non_forested_azimuth.azimuth_2
-                tab['D{}'.format(rownumber)] = non_forested_azimuth.azimuth_3
+                tab[f'A{rownumber}'] = non_forested_azimuth.micro_plot_id
+                tab[f'B{rownumber}'] = non_forested_azimuth.azimuth_1
+                tab[f'C{rownumber}'] = non_forested_azimuth.azimuth_2
+                tab[f'D{rownumber}'] = non_forested_azimuth.azimuth_3
             else:
-                tab['A{}'.format(rownumber)] = ''
-                tab['B{}'.format(rownumber)] = ''
-                tab['C{}'.format(rownumber)] = ''
-                tab['D{}'.format(rownumber)] = ''
+                tab[f'A{rownumber}'] = ''
+                tab[f'B{rownumber}'] = ''
+                tab[f'C{rownumber}'] = ''
+                tab[f'D{rownumber}'] = ''

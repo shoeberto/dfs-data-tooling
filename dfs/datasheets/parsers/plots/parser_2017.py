@@ -20,7 +20,7 @@ class DatasheetParser2017(DatasheetParser):
 
         for rownumber in range(9, 14):
             subplot = datatabs.general.PlotGeneralTabSubplot()
-            subplot.micro_plot_id = self.parse_int(worksheet['C{}'.format(rownumber)].value)
+            subplot.micro_plot_id = self.parse_int(worksheet[f'C{rownumber}'].value)
 
             # Ignore slope
             subplot.latitude = self.parse_float(worksheet[f'A{rownumber}'].value)

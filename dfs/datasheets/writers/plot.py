@@ -39,7 +39,7 @@ class PlotDatasheetWriter:
         seedling_tab = workbook.create_sheet(title=datasheet.TAB_NAME_SEEDLING)
         self.format_seedling_tab(sheet, seedling_tab)
 
-        workbook.save('{}/{}'.format(output_directory, sheet.output_filename))
+        workbook.save(f'{output_directory}/{sheet.output_filename}')
 
 
     def format_general_tab(self, sheet, tab):
@@ -86,9 +86,9 @@ class PlotDatasheetWriter:
 
             subplot = sheet.tabs[datasheet.TAB_NAME_GENERAL].subplots[i]
 
-            tab['A{}'.format(rownumber)] = subplot.latitude
-            tab['B{}'.format(rownumber)] = subplot.longitude
-            tab['C{}'.format(rownumber)] = int(subplot.micro_plot_id)
+            tab[f'A{rownumber}'] = subplot.latitude
+            tab[f'B{rownumber}'] = subplot.longitude
+            tab[f'C{rownumber}'] = int(subplot.micro_plot_id)
 
             if None == subplot.collected:
                 if subplot.micro_plot_id in sheet.tabs[datasheet.TAB_NAME_COVER_TABLE].get_recorded_subplots():
@@ -96,21 +96,21 @@ class PlotDatasheetWriter:
                 else:
                     subplot.collected = 'No'
 
-            tab['D{}'.format(rownumber)] = subplot.collected
-            tab['E{}'.format(rownumber)] = subplot.fenced
-            tab['F{}'.format(rownumber)] = subplot.azimuth
-            tab['G{}'.format(rownumber)] = subplot.distance
-            tab['H{}'.format(rownumber)] = subplot.altitude
+            tab[f'D{rownumber}'] = subplot.collected
+            tab[f'E{rownumber}'] = subplot.fenced
+            tab[f'F{rownumber}'] = subplot.azimuth
+            tab[f'G{rownumber}'] = subplot.distance
+            tab[f'H{rownumber}'] = subplot.altitude
 
             if subplot.converted_latitude:
-                tab['I{}'.format(rownumber)] = subplot.converted_latitude
+                tab[f'I{rownumber}'] = subplot.converted_latitude
             else:
-                tab['I{}'.format(rownumber)] = '=IF(ISBLANK(A{0}),"",LEFT((LEFT(A{0},2)+(RIGHT(A{0},LEN(A{0})-2)/60)),10))'.format(rownumber)
+                tab[f'I{rownumber}'] = '=IF(ISBLANK(A{0}),"",LEFT((LEFT(A{0},2)+(RIGHT(A{0},LEN(A{0})-2)/60)),10))'.format(rownumber)
 
             if subplot.converted_longitude:
-                tab['J{}'.format(rownumber)] = subplot.converted_longitude
+                tab[f'J{rownumber}'] = subplot.converted_longitude
             else:
-                tab['J{}'.format(rownumber)] = '=IF(ISBLANK(B{0}),"",LEFT(-1*(LEFT(B{0},2)+(RIGHT(B{0},LEN(B{0})-2)/60)),10))'.format(rownumber)
+                tab[f'J{rownumber}'] = '=IF(ISBLANK(B{0}),"",LEFT(-1*(LEFT(B{0},2)+(RIGHT(B{0},LEN(B{0})-2)/60)),10))'.format(rownumber)
 
             i += 1
 
@@ -139,14 +139,14 @@ class PlotDatasheetWriter:
 
             subplot = sheet.tabs[datasheet.TAB_NAME_GENERAL].subplots[i]
 
-            tab['A{}'.format(rownumber)] = subplot.micro_plot_id
-            tab['B{}'.format(rownumber)] = subplot.re_monumented
-            tab['C{}'.format(rownumber)] = subplot.forested
-            tab['D{}'.format(rownumber)] = subplot.disturbance
-            tab['E{}'.format(rownumber)] = subplot.disturbance_type
-            tab['F{}'.format(rownumber)] = subplot.lime
-            tab['G{}'.format(rownumber)] = subplot.herbicide
-            tab['H{}'.format(rownumber)] = subplot.notes
+            tab[f'A{rownumber}'] = subplot.micro_plot_id
+            tab[f'B{rownumber}'] = subplot.re_monumented
+            tab[f'C{rownumber}'] = subplot.forested
+            tab[f'D{rownumber}'] = subplot.disturbance
+            tab[f'E{rownumber}'] = subplot.disturbance_type
+            tab[f'F{rownumber}'] = subplot.lime
+            tab[f'G{rownumber}'] = subplot.herbicide
+            tab[f'H{rownumber}'] = subplot.notes
 
             i += 1
 
@@ -182,17 +182,17 @@ class PlotDatasheetWriter:
             if i < len(sheet.tabs[datasheet.TAB_NAME_GENERAL].auxillary_post_locations):
                 auxillary_post_location = sheet.tabs[datasheet.TAB_NAME_GENERAL].auxillary_post_locations[i]
 
-                tab['A{}'.format(rownumber)] = auxillary_post_location.micro_plot_id
-                tab['B{}'.format(rownumber)] = auxillary_post_location.post
-                tab['C{}'.format(rownumber)] = auxillary_post_location.stake_type
-                tab['D{}'.format(rownumber)] = auxillary_post_location.azimuth
-                tab['E{}'.format(rownumber)] = auxillary_post_location.distance
+                tab[f'A{rownumber}'] = auxillary_post_location.micro_plot_id
+                tab[f'B{rownumber}'] = auxillary_post_location.post
+                tab[f'C{rownumber}'] = auxillary_post_location.stake_type
+                tab[f'D{rownumber}'] = auxillary_post_location.azimuth
+                tab[f'E{rownumber}'] = auxillary_post_location.distance
             else:
-                tab['A{}'.format(rownumber)] = ''
-                tab['B{}'.format(rownumber)] = ''
-                tab['C{}'.format(rownumber)] = ''
-                tab['D{}'.format(rownumber)] = ''
-                tab['E{}'.format(rownumber)] = ''
+                tab[f'A{rownumber}'] = ''
+                tab[f'B{rownumber}'] = ''
+                tab[f'C{rownumber}'] = ''
+                tab[f'D{rownumber}'] = ''
+                tab[f'E{rownumber}'] = ''
 
             i += 1
 
@@ -209,15 +209,15 @@ class PlotDatasheetWriter:
             if i < len(sheet.tabs[datasheet.TAB_NAME_GENERAL].non_forested_azimuths):
                 non_forested_azimuth = sheet.tabs[datasheet.TAB_NAME_GENERAL].non_forested_azimuths[i]
 
-                tab['A{}'.format(rownumber)] = non_forested_azimuth.micro_plot_id
-                tab['B{}'.format(rownumber)] = non_forested_azimuth.azimuth_1
-                tab['C{}'.format(rownumber)] = non_forested_azimuth.azimuth_2
-                tab['D{}'.format(rownumber)] = non_forested_azimuth.azimuth_3
+                tab[f'A{rownumber}'] = non_forested_azimuth.micro_plot_id
+                tab[f'B{rownumber}'] = non_forested_azimuth.azimuth_1
+                tab[f'C{rownumber}'] = non_forested_azimuth.azimuth_2
+                tab[f'D{rownumber}'] = non_forested_azimuth.azimuth_3
             else:
-                tab['A{}'.format(rownumber)] = ''
-                tab['B{}'.format(rownumber)] = ''
-                tab['C{}'.format(rownumber)] = ''
-                tab['D{}'.format(rownumber)] = ''
+                tab[f'A{rownumber}'] = ''
+                tab[f'B{rownumber}'] = ''
+                tab[f'C{rownumber}'] = ''
+                tab[f'D{rownumber}'] = ''
 
 
 
@@ -273,7 +273,7 @@ class PlotDatasheetWriter:
         i = 0
 
         for rownumber in range(3, 14):
-            tab['A{}'.format(rownumber)] = default_tree_number
+            tab[f'A{rownumber}'] = default_tree_number
 
             if rownumber < 5 or (rownumber > 5 and rownumber < 7) or (rownumber > 7 and rownumber < 9) or (rownumber > 9 and rownumber < 11) or (rownumber > 11 and rownumber < 13):
                 default_tree_number += 1
@@ -283,21 +283,21 @@ class PlotDatasheetWriter:
             if i < len(sheet.tabs[datasheet.TAB_NAME_WITNESS_TREES].witness_trees):
                 tree = sheet.tabs[datasheet.TAB_NAME_WITNESS_TREES].witness_trees[i]
 
-                tab['B{}'.format(rownumber)] = tree.micro_plot_id
-                tab['C{}'.format(rownumber)] = tree.species_known
-                tab['D{}'.format(rownumber)] = tree.species_guess
-                tab['E{}'.format(rownumber)] = tree.dbh
-                tab['F{}'.format(rownumber)] = tree.live_or_dead
-                tab['G{}'.format(rownumber)] = tree.azimuth
-                tab['H{}'.format(rownumber)] = tree.distance
+                tab[f'B{rownumber}'] = tree.micro_plot_id
+                tab[f'C{rownumber}'] = tree.species_known
+                tab[f'D{rownumber}'] = tree.species_guess
+                tab[f'E{rownumber}'] = tree.dbh
+                tab[f'F{rownumber}'] = tree.live_or_dead
+                tab[f'G{rownumber}'] = tree.azimuth
+                tab[f'H{rownumber}'] = tree.distance
             else:
-                tab['B{}'.format(rownumber)] = ''
-                tab['C{}'.format(rownumber)] = ''
-                tab['D{}'.format(rownumber)] = ''
-                tab['E{}'.format(rownumber)] = ''
-                tab['F{}'.format(rownumber)] = ''
-                tab['G{}'.format(rownumber)] = ''
-                tab['H{}'.format(rownumber)] = ''
+                tab[f'B{rownumber}'] = ''
+                tab[f'C{rownumber}'] = ''
+                tab[f'D{rownumber}'] = ''
+                tab[f'E{rownumber}'] = ''
+                tab[f'F{rownumber}'] = ''
+                tab[f'G{rownumber}'] = ''
+                tab[f'H{rownumber}'] = ''
 
             i += 1
 
@@ -319,28 +319,28 @@ class PlotDatasheetWriter:
         i = 3
 
         if 0 == len(sheet.tabs[datasheet.TAB_NAME_COVER_TABLE].cover_species):
-            tab['A{}'.format(i)] = ''
-            tab['B{}'.format(i)] = ''
-            tab['C{}'.format(i)] = ''
-            tab['D{}'.format(i)] = ''
-            tab['E{}'.format(i)] = ''
-            tab['F{}'.format(i)] = ''
-            tab['G{}'.format(i)] = ''
-            tab['H{}'.format(i)] = ''
-            tab['I{}'.format(i)] = ''
-            tab['J{}'.format(i)] = ''
+            tab[f'A{i}'] = ''
+            tab[f'B{i}'] = ''
+            tab[f'C{i}'] = ''
+            tab[f'D{i}'] = ''
+            tab[f'E{i}'] = ''
+            tab[f'F{i}'] = ''
+            tab[f'G{i}'] = ''
+            tab[f'H{i}'] = ''
+            tab[f'I{i}'] = ''
+            tab[f'J{i}'] = ''
         else:
             for cover_species in sheet.tabs[datasheet.TAB_NAME_COVER_TABLE].cover_species:
-                tab['A{}'.format(i)] = cover_species.micro_plot_id
-                tab['B{}'.format(i)] = cover_species.quarter
-                tab['C{}'.format(i)] = cover_species.scale
-                tab['D{}'.format(i)] = cover_species.species_known
-                tab['E{}'.format(i)] = cover_species.species_guess
-                tab['F{}'.format(i)] = cover_species.percent_cover
-                tab['G{}'.format(i)] = cover_species.average_height
-                tab['H{}'.format(i)] = cover_species.count
-                tab['I{}'.format(i)] = cover_species.flower
-                tab['J{}'.format(i)] = cover_species.number_of_stems
+                tab[f'A{i}'] = cover_species.micro_plot_id
+                tab[f'B{i}'] = cover_species.quarter
+                tab[f'C{i}'] = cover_species.scale
+                tab[f'D{i}'] = cover_species.species_known
+                tab[f'E{i}'] = cover_species.species_guess
+                tab[f'F{i}'] = cover_species.percent_cover
+                tab[f'G{i}'] = cover_species.average_height
+                tab[f'H{i}'] = cover_species.count
+                tab[f'I{i}'] = cover_species.flower
+                tab[f'J{i}'] = cover_species.number_of_stems
 
                 i += 1
 
@@ -359,22 +359,22 @@ class PlotDatasheetWriter:
         i = 3
 
         if 0 == len(sheet.tabs[datasheet.TAB_NAME_SAPLING].sapling_species):
-            tab['A{}'.format(i)] = ''
-            tab['B{}'.format(i)] = ''
-            tab['C{}'.format(i)] = ''
-            tab['D{}'.format(i)] = ''
-            tab['E{}'.format(i)] = ''
-            tab['F{}'.format(i)] = ''
-            tab['G{}'.format(i)] = ''
+            tab[f'A{i}'] = ''
+            tab[f'B{i}'] = ''
+            tab[f'C{i}'] = ''
+            tab[f'D{i}'] = ''
+            tab[f'E{i}'] = ''
+            tab[f'F{i}'] = ''
+            tab[f'G{i}'] = ''
         else: 
             for sapling_species in sheet.tabs[datasheet.TAB_NAME_SAPLING].sapling_species:
-                tab['A{}'.format(i)] = sapling_species.micro_plot_id
-                tab['B{}'.format(i)] = sapling_species.sapling_number
-                tab['C{}'.format(i)] = sapling_species.quarter
-                tab['D{}'.format(i)] = sapling_species.scale
-                tab['E{}'.format(i)] = sapling_species.species_known
-                tab['F{}'.format(i)] = sapling_species.species_guess
-                tab['G{}'.format(i)] = sapling_species.diameter_breast_height
+                tab[f'A{i}'] = sapling_species.micro_plot_id
+                tab[f'B{i}'] = sapling_species.sapling_number
+                tab[f'C{i}'] = sapling_species.quarter
+                tab[f'D{i}'] = sapling_species.scale
+                tab[f'E{i}'] = sapling_species.species_known
+                tab[f'F{i}'] = sapling_species.species_guess
+                tab[f'G{i}'] = sapling_species.diameter_breast_height
 
                 i += 1
 
@@ -399,36 +399,36 @@ class PlotDatasheetWriter:
 
         i = 3
         if 0 == len(sheet.tabs[datasheet.TAB_NAME_SEEDLING].seedling_species):
-            tab['A{}'.format(i)] = ''
-            tab['B{}'.format(i)] = ''
-            tab['C{}'.format(i)] = ''
-            tab['D{}'.format(i)] = ''
-            tab['E{}'.format(i)] = ''
-            tab['F{}'.format(i)] = ''
-            tab['G{}'.format(i)] = ''
-            tab['H{}'.format(i)] = ''
-            tab['I{}'.format(i)] = ''
-            tab['J{}'.format(i)] = ''
-            tab['K{}'.format(i)] = ''
-            tab['L{}'.format(i)] = ''
-            tab['M{}'.format(i)] = ''
-            tab['N{}'.format(i)] = ''
+            tab[f'A{i}'] = ''
+            tab[f'B{i}'] = ''
+            tab[f'C{i}'] = ''
+            tab[f'D{i}'] = ''
+            tab[f'E{i}'] = ''
+            tab[f'F{i}'] = ''
+            tab[f'G{i}'] = ''
+            tab[f'H{i}'] = ''
+            tab[f'I{i}'] = ''
+            tab[f'J{i}'] = ''
+            tab[f'K{i}'] = ''
+            tab[f'L{i}'] = ''
+            tab[f'M{i}'] = ''
+            tab[f'N{i}'] = ''
         else:
             for seedling_species in sheet.tabs[datasheet.TAB_NAME_SEEDLING].seedling_species:
-                tab['A{}'.format(i)] = seedling_species.micro_plot_id
-                tab['B{}'.format(i)] = seedling_species.quarter
-                tab['C{}'.format(i)] = seedling_species.scale
-                tab['D{}'.format(i)] = seedling_species.species_known
-                tab['E{}'.format(i)] = seedling_species.species_guess
-                tab['F{}'.format(i)] = seedling_species.sprout
-                tab['G{}'.format(i)] = seedling_species.zero_six_inches
-                tab['H{}'.format(i)] = seedling_species.six_twelve_inches
-                tab['I{}'.format(i)] = seedling_species.one_three_feet_total
-                tab['J{}'.format(i)] = seedling_species.one_three_feet_browsed
-                tab['K{}'.format(i)] = seedling_species.three_five_feet_total
-                tab['L{}'.format(i)] = seedling_species.three_five_feet_browsed
-                tab['M{}'.format(i)] = seedling_species.greater_five_feet_total
-                tab['N{}'.format(i)] = seedling_species.greater_five_feet_browsed
+                tab[f'A{i}'] = seedling_species.micro_plot_id
+                tab[f'B{i}'] = seedling_species.quarter
+                tab[f'C{i}'] = seedling_species.scale
+                tab[f'D{i}'] = seedling_species.species_known
+                tab[f'E{i}'] = seedling_species.species_guess
+                tab[f'F{i}'] = seedling_species.sprout
+                tab[f'G{i}'] = seedling_species.zero_six_inches
+                tab[f'H{i}'] = seedling_species.six_twelve_inches
+                tab[f'I{i}'] = seedling_species.one_three_feet_total
+                tab[f'J{i}'] = seedling_species.one_three_feet_browsed
+                tab[f'K{i}'] = seedling_species.three_five_feet_total
+                tab[f'L{i}'] = seedling_species.three_five_feet_browsed
+                tab[f'M{i}'] = seedling_species.greater_five_feet_total
+                tab[f'N{i}'] = seedling_species.greater_five_feet_browsed
 
                 i += 1
 
@@ -446,21 +446,21 @@ class PlotDatasheetWriter:
 
         i = 3
         if 0 == len(sheet.tabs[datasheet.TAB_NAME_TREE_TABLE].tree_species):
-            tab['A{}'.format(i)] = ''
-            tab['B{}'.format(i)] = ''
-            tab['C{}'.format(i)] = ''
-            tab['D{}'.format(i)] = ''
-            tab['E{}'.format(i)] = ''
-            tab['F{}'.format(i)] = ''
-            tab['G{}'.format(i)] = ''
+            tab[f'A{i}'] = ''
+            tab[f'B{i}'] = ''
+            tab[f'C{i}'] = ''
+            tab[f'D{i}'] = ''
+            tab[f'E{i}'] = ''
+            tab[f'F{i}'] = ''
+            tab[f'G{i}'] = ''
         else:
             for tree_species in sheet.tabs[datasheet.TAB_NAME_TREE_TABLE].tree_species:
-                tab['A{}'.format(i)] = tree_species.micro_plot_id
-                tab['B{}'.format(i)] = tree_species.tree_number
-                tab['C{}'.format(i)] = tree_species.species_known
-                tab['D{}'.format(i)] = tree_species.species_guess
-                tab['E{}'.format(i)] = tree_species.diameter_breast_height
-                tab['F{}'.format(i)] = tree_species.live_or_dead
-                tab['G{}'.format(i)] = tree_species.comments
+                tab[f'A{i}'] = tree_species.micro_plot_id
+                tab[f'B{i}'] = tree_species.tree_number
+                tab[f'C{i}'] = tree_species.species_known
+                tab[f'D{i}'] = tree_species.species_guess
+                tab[f'E{i}'] = tree_species.diameter_breast_height
+                tab[f'F{i}'] = tree_species.live_or_dead
+                tab[f'G{i}'] = tree_species.comments
 
                 i += 1

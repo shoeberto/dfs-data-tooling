@@ -18,8 +18,8 @@ def run(data_year, input_directory, output_directory, data_type):
 
     w = get_writer(data_type)
 
-    for filename in sorted(glob.glob('{}/*.xlsx'.format(input_directory))):
-        print("{}:".format(basename(filename)))
+    for filename in sorted(glob.glob(f'{input_directory}/*.xlsx')):
+        print(f'{basename(filename)}:')
 
         try:
             datasheet = p.parse_datasheet(filename)
@@ -33,7 +33,7 @@ def run(data_year, input_directory, output_directory, data_type):
                 raise Exception('Encountered a fatal error writing the converted file. Validation errors may need to be fixed first.')
 
         except Exception as e:
-            print('Fatal error encountered: {}'.format(str(e)))
+            print(f'Fatal error encountered: {str(e)}')
 
         print('\n')
 

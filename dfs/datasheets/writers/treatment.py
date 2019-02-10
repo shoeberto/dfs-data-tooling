@@ -51,10 +51,10 @@ class TreatmentDatasheetWriter(PlotDatasheetWriter):
 
             subplot = sheet.tabs[datasheet.TAB_NAME_GENERAL].subplots[i]
 
-            tab['A{}'.format(rownumber)] = subplot.latitude
-            tab['B{}'.format(rownumber)] = subplot.longitude
+            tab[f'A{rownumber}'] = subplot.latitude
+            tab[f'B{rownumber}'] = subplot.longitude
 
-            tab['C{}'.format(rownumber)] = int(subplot.micro_plot_id)
+            tab[f'C{rownumber}'] = int(subplot.micro_plot_id)
 
             override_collected = 'Yes'
 
@@ -66,23 +66,23 @@ class TreatmentDatasheetWriter(PlotDatasheetWriter):
             if override_collected != subplot.collected:
                 print(f'Warning: value of collected at subplot {subplot.micro_plot_id} does not match the actual collection data and will be overridden.')
 
-            tab['D{}'.format(rownumber)] = override_collected
-            tab['E{}'.format(rownumber)] = subplot.re_monumented
-            tab['F{}'.format(rownumber)] = subplot.forested
-            tab['G{}'.format(rownumber)] = subplot.disturbance
-            tab['H{}'.format(rownumber)] = subplot.disturbance_type
-            tab['I{}'.format(rownumber)] = subplot.altitude
-            tab['J{}'.format(rownumber)] = subplot.notes
+            tab[f'D{rownumber}'] = override_collected
+            tab[f'E{rownumber}'] = subplot.re_monumented
+            tab[f'F{rownumber}'] = subplot.forested
+            tab[f'G{rownumber}'] = subplot.disturbance
+            tab[f'H{rownumber}'] = subplot.disturbance_type
+            tab[f'I{rownumber}'] = subplot.altitude
+            tab[f'J{rownumber}'] = subplot.notes
 
             if subplot.converted_latitude:
-                tab['K{}'.format(rownumber)] = subplot.converted_latitude
+                tab[f'K{rownumber}'] = subplot.converted_latitude
             else:
-                tab['K{}'.format(rownumber)] = '=IF(ISBLANK(A{0}),"",LEFT((LEFT(A{0},2)+(RIGHT(A{0},LEN(A{0})-2)/60)),10))'.format(rownumber)
+                tab[f'K{rownumber}'] = '=IF(ISBLANK(A{0}),"",LEFT((LEFT(A{0},2)+(RIGHT(A{0},LEN(A{0})-2)/60)),10))'.format(rownumber)
 
             if subplot.converted_longitude:
-                tab['L{}'.format(rownumber)] = subplot.converted_longitude
+                tab[f'L{rownumber}'] = subplot.converted_longitude
             else:
-                tab['L{}'.format(rownumber)] = '=IF(ISBLANK(B{0}),"",LEFT(-1*(LEFT(B{0},2)+(RIGHT(B{0},LEN(B{0})-2)/60)),10))'.format(rownumber)
+                tab[f'L{rownumber}'] = '=IF(ISBLANK(B{0}),"",LEFT(-1*(LEFT(B{0},2)+(RIGHT(B{0},LEN(B{0})-2)/60)),10))'.format(rownumber)
 
             i += 1
 
@@ -105,17 +105,17 @@ class TreatmentDatasheetWriter(PlotDatasheetWriter):
             if i < len(sheet.tabs[datasheet.TAB_NAME_GENERAL].auxillary_post_locations):
                 auxillary_post_location = sheet.tabs[datasheet.TAB_NAME_GENERAL].auxillary_post_locations[i]
 
-                tab['A{}'.format(rownumber)] = auxillary_post_location.micro_plot_id
-                tab['B{}'.format(rownumber)] = auxillary_post_location.post
-                tab['C{}'.format(rownumber)] = auxillary_post_location.stake_type
-                tab['D{}'.format(rownumber)] = auxillary_post_location.azimuth
-                tab['E{}'.format(rownumber)] = auxillary_post_location.distance
+                tab[f'A{rownumber}'] = auxillary_post_location.micro_plot_id
+                tab[f'B{rownumber}'] = auxillary_post_location.post
+                tab[f'C{rownumber}'] = auxillary_post_location.stake_type
+                tab[f'D{rownumber}'] = auxillary_post_location.azimuth
+                tab[f'E{rownumber}'] = auxillary_post_location.distance
             else:
-                tab['A{}'.format(rownumber)] = ''
-                tab['B{}'.format(rownumber)] = ''
-                tab['C{}'.format(rownumber)] = ''
-                tab['D{}'.format(rownumber)] = ''
-                tab['E{}'.format(rownumber)] = ''
+                tab[f'A{rownumber}'] = ''
+                tab[f'B{rownumber}'] = ''
+                tab[f'C{rownumber}'] = ''
+                tab[f'D{rownumber}'] = ''
+                tab[f'E{rownumber}'] = ''
 
             i += 1
 
@@ -132,15 +132,15 @@ class TreatmentDatasheetWriter(PlotDatasheetWriter):
             if i < len(sheet.tabs[datasheet.TAB_NAME_GENERAL].non_forested_azimuths):
                 non_forested_azimuth = sheet.tabs[datasheet.TAB_NAME_GENERAL].non_forested_azimuths[i]
 
-                tab['A{}'.format(rownumber)] = non_forested_azimuth.micro_plot_id
-                tab['B{}'.format(rownumber)] = non_forested_azimuth.azimuth_1
-                tab['C{}'.format(rownumber)] = non_forested_azimuth.azimuth_2
-                tab['D{}'.format(rownumber)] = non_forested_azimuth.azimuth_3
+                tab[f'A{rownumber}'] = non_forested_azimuth.micro_plot_id
+                tab[f'B{rownumber}'] = non_forested_azimuth.azimuth_1
+                tab[f'C{rownumber}'] = non_forested_azimuth.azimuth_2
+                tab[f'D{rownumber}'] = non_forested_azimuth.azimuth_3
             else:
-                tab['A{}'.format(rownumber)] = ''
-                tab['B{}'.format(rownumber)] = ''
-                tab['C{}'.format(rownumber)] = ''
-                tab['D{}'.format(rownumber)] = ''
+                tab[f'A{rownumber}'] = ''
+                tab[f'B{rownumber}'] = ''
+                tab[f'C{rownumber}'] = ''
+                tab[f'D{rownumber}'] = ''
 
 
     def format_witness_trees_tab(self, sheet, tab):
@@ -161,22 +161,22 @@ class TreatmentDatasheetWriter(PlotDatasheetWriter):
             if i < len(sheet.tabs[datasheet.TAB_NAME_WITNESS_TREES].witness_trees):
                 tree = sheet.tabs[datasheet.TAB_NAME_WITNESS_TREES].witness_trees[i]
 
-                tab['A{}'.format(rownumber)] = tree.tree_number
-                tab['B{}'.format(rownumber)] = tree.micro_plot_id
-                tab['C{}'.format(rownumber)] = tree.species_known
-                tab['D{}'.format(rownumber)] = tree.species_guess
-                tab['E{}'.format(rownumber)] = tree.dbh
-                tab['F{}'.format(rownumber)] = tree.live_or_dead
-                tab['G{}'.format(rownumber)] = tree.azimuth
-                tab['H{}'.format(rownumber)] = tree.distance
+                tab[f'A{rownumber}'] = tree.tree_number
+                tab[f'B{rownumber}'] = tree.micro_plot_id
+                tab[f'C{rownumber}'] = tree.species_known
+                tab[f'D{rownumber}'] = tree.species_guess
+                tab[f'E{rownumber}'] = tree.dbh
+                tab[f'F{rownumber}'] = tree.live_or_dead
+                tab[f'G{rownumber}'] = tree.azimuth
+                tab[f'H{rownumber}'] = tree.distance
             else:
-                tab['A{}'.format(rownumber)] = ''
-                tab['B{}'.format(rownumber)] = ''
-                tab['C{}'.format(rownumber)] = ''
-                tab['D{}'.format(rownumber)] = ''
-                tab['E{}'.format(rownumber)] = ''
-                tab['F{}'.format(rownumber)] = ''
-                tab['G{}'.format(rownumber)] = ''
-                tab['H{}'.format(rownumber)] = ''
+                tab[f'A{rownumber}'] = ''
+                tab[f'B{rownumber}'] = ''
+                tab[f'C{rownumber}'] = ''
+                tab[f'D{rownumber}'] = ''
+                tab[f'E{rownumber}'] = ''
+                tab[f'F{rownumber}'] = ''
+                tab[f'G{rownumber}'] = ''
+                tab[f'H{rownumber}'] = ''
 
             i += 1

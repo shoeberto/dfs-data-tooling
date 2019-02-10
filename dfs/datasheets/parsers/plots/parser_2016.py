@@ -25,13 +25,13 @@ class DatasheetParser2016(DatasheetParser):
 
         for rownumber in range(8, 13):
             subplot = datatabs.general.PlotGeneralTabSubplot()
-            subplot.micro_plot_id = self.parse_int(worksheet['A{}'.format(rownumber)].value)
+            subplot.micro_plot_id = self.parse_int(worksheet[f'A{rownumber}'].value)
 
             # Ignore slope
             subplot.latitude = self.parse_float(worksheet[f'K{rownumber}'].value)
             subplot.longitude = self.parse_float(worksheet[f'L{rownumber}'].value)
 
-            subplot.forested = worksheet['D{}'.format(rownumber)].value
+            subplot.forested = worksheet[f'D{rownumber}'].value
 
             if None == subplot.forested:
                 if subplot.micro_plot_id in collected_cover_subplots or (None != subplot.latitude or None != subplot.longitude):
@@ -153,28 +153,28 @@ class DatasheetParser2016(DatasheetParser):
         i = 3
 
         while (row_valid):
-            if not worksheet['A{}'.format(i)].value:
+            if not worksheet[f'A{i}'].value:
                 row_valid = False
                 continue
 
             species = datatabs.cover.CoverSpecies()
 
-            species.micro_plot_id = self.parse_int(worksheet['A{}'.format(i)].value)
-            species.quarter = self.parse_int(worksheet['B{}'.format(i)].value)
-            species.scale = self.parse_int(worksheet['C{}'.format(i)].value)
-            species.species_known = worksheet['D{}'.format(i)].value
-            species.species_guess = worksheet['E{}'.format(i)].value
+            species.micro_plot_id = self.parse_int(worksheet[f'A{i}'].value)
+            species.quarter = self.parse_int(worksheet[f'B{i}'].value)
+            species.scale = self.parse_int(worksheet[f'C{i}'].value)
+            species.species_known = worksheet[f'D{i}'].value
+            species.species_guess = worksheet[f'E{i}'].value
 
-            species.flower = self.parse_int(worksheet['I{}'.format(i)].value)
-            species.number_of_stems = self.parse_int(worksheet['J{}'.format(i)].value)
+            species.flower = self.parse_int(worksheet[f'I{i}'].value)
+            species.number_of_stems = self.parse_int(worksheet[f'J{i}'].value)
 
             if species.species_known in datatabs.cover.CoverSpecies.DEER_INDICATOR_SPECIES:
                 if None == species.flower:
                     species.flower = 0
 
-            species.percent_cover = self.parse_int(worksheet['F{}'.format(i)].value)
-            species.average_height = self.parse_int(worksheet['G{}'.format(i)].value)
-            species.count = self.parse_int(worksheet['H{}'.format(i)].value)
+            species.percent_cover = self.parse_int(worksheet[f'F{i}'].value)
+            species.average_height = self.parse_int(worksheet[f'G{i}'].value)
+            species.count = self.parse_int(worksheet[f'H{i}'].value)
 
             if species.count and (not species.flower) and species.override_species(species.species_known) in datatabs.cover.CoverSpecies.DEER_INDICATOR_SPECIES:
                 species.flower = 0
@@ -214,13 +214,13 @@ class DatasheetParser2016(DatasheetParser):
         subplot_sapling_numbers = {}
 
         while (row_valid):
-            if not worksheet['A{}'.format(i)].value:
+            if not worksheet[f'A{i}'].value:
                 row_valid = False
                 continue
 
             species = datatabs.sapling.SaplingSpecies()
 
-            species.micro_plot_id = self.parse_int(worksheet['A{}'.format(i)].value)
+            species.micro_plot_id = self.parse_int(worksheet[f'A{i}'].value)
 
             if species.micro_plot_id not in subplot_sapling_numbers:
                 subplot_sapling_numbers[species.micro_plot_id] = 1
@@ -228,11 +228,11 @@ class DatasheetParser2016(DatasheetParser):
                 subplot_sapling_numbers[species.micro_plot_id] += 1
 
             species.sapling_number = subplot_sapling_numbers[species.micro_plot_id]
-            species.quarter = self.parse_int(worksheet['B{}'.format(i)].value)
-            species.scale = self.parse_int(worksheet['C{}'.format(i)].value)
-            species.species_known = worksheet['D{}'.format(i)].value
-            species.species_guess = worksheet['E{}'.format(i)].value
-            species.diameter_breast_height = self.parse_float(worksheet['F{}'.format(i)].value)
+            species.quarter = self.parse_int(worksheet[f'B{i}'].value)
+            species.scale = self.parse_int(worksheet[f'C{i}'].value)
+            species.species_known = worksheet[f'D{i}'].value
+            species.species_guess = worksheet[f'E{i}'].value
+            species.diameter_breast_height = self.parse_float(worksheet[f'F{i}'].value)
 
             tab.sapling_species.append(species)
 
@@ -249,39 +249,39 @@ class DatasheetParser2016(DatasheetParser):
         i = 3
 
         while (row_valid):
-            if not worksheet['A{}'.format(i)].value:
+            if not worksheet[f'A{i}'].value:
                 row_valid = False
                 continue
 
             species = datatabs.seedling.SeedlingSpecies()
 
-            species.micro_plot_id = worksheet['A{}'.format(i)].value
+            species.micro_plot_id = worksheet[f'A{i}'].value
 
-            species.quarter = self.parse_int(worksheet['B{}'.format(i)].value)
-            species.scale = self.parse_int(worksheet['C{}'.format(i)].value)
-            species.species_known = worksheet['D{}'.format(i)].value
-            species.species_guess = worksheet['E{}'.format(i)].value
+            species.quarter = self.parse_int(worksheet[f'B{i}'].value)
+            species.scale = self.parse_int(worksheet[f'C{i}'].value)
+            species.species_known = worksheet[f'D{i}'].value
+            species.species_guess = worksheet[f'E{i}'].value
             species.sprout = self.parse_int(worksheet[f'F{i}'].value)
 
             if None == species.sprout:
                 species.sprout = 0
 
-            species.zero_six_inches = worksheet['G{}'.format(i)].value
-            species.six_twelve_inches = worksheet['H{}'.format(i)].value
-            species.one_three_feet_total = worksheet['I{}'.format(i)].value
-            species.one_three_feet_browsed = worksheet['J{}'.format(i)].value
+            species.zero_six_inches = worksheet[f'G{i}'].value
+            species.six_twelve_inches = worksheet[f'H{i}'].value
+            species.one_three_feet_total = worksheet[f'I{i}'].value
+            species.one_three_feet_browsed = worksheet[f'J{i}'].value
 
             if species.one_three_feet_total and not species.one_three_feet_browsed:
                 species.one_three_feet_browsed = 0
 
-            species.three_five_feet_total = worksheet['K{}'.format(i)].value
-            species.three_five_feet_browsed = worksheet['L{}'.format(i)].value
+            species.three_five_feet_total = worksheet[f'K{i}'].value
+            species.three_five_feet_browsed = worksheet[f'L{i}'].value
 
             if species.three_five_feet_total and not species.three_five_feet_browsed:
                 species.three_five_feet_browsed = 0
 
-            species.greater_five_feet_total = worksheet['M{}'.format(i)].value
-            species.greater_five_feet_browsed = worksheet['N{}'.format(i)].value
+            species.greater_five_feet_total = worksheet[f'M{i}'].value
+            species.greater_five_feet_browsed = worksheet[f'N{i}'].value
 
             if species.greater_five_feet_total and not species.greater_five_feet_browsed:
                 species.greater_five_feet_browsed = 0
@@ -303,13 +303,13 @@ class DatasheetParser2016(DatasheetParser):
         subplot_tree_numbers = {}
 
         while (row_valid):
-            if not worksheet['A{}'.format(i)].value:
+            if not worksheet[f'A{i}'].value:
                 row_valid = False
                 continue
 
             species = datatabs.tree.TreeTableSpecies()
 
-            species.micro_plot_id = worksheet['A{}'.format(i)].value
+            species.micro_plot_id = worksheet[f'A{i}'].value
 
             if species.micro_plot_id not in subplot_tree_numbers:
                 subplot_tree_numbers[species.micro_plot_id] = 1
@@ -317,11 +317,11 @@ class DatasheetParser2016(DatasheetParser):
                 subplot_tree_numbers[species.micro_plot_id] += 1
 
             species.tree_number = subplot_tree_numbers[species.micro_plot_id]
-            species.species_known = worksheet['C{}'.format(i)].value
-            species.species_guess = worksheet['D{}'.format(i)].value
-            species.diameter_breast_height = self.parse_float(worksheet['E{}'.format(i)].value)
+            species.species_known = worksheet[f'C{i}'].value
+            species.species_guess = worksheet[f'D{i}'].value
+            species.diameter_breast_height = self.parse_float(worksheet[f'E{i}'].value)
 
-            live_or_dead = self.parse_int(worksheet['F{}'.format(i)].value)
+            live_or_dead = self.parse_int(worksheet[f'F{i}'].value)
 
             if None != live_or_dead:
                 species.live_or_dead = 'L' if 1 == live_or_dead else 'D'
@@ -346,11 +346,11 @@ class DatasheetParser2016(DatasheetParser):
         i = 3
 
         while (row_valid):
-            if not worksheet['A{}'.format(i)].value:
+            if not worksheet[f'A{i}'].value:
                 row_valid = False
                 continue
 
-            subplots.append(self.parse_int(worksheet['A{}'.format(i)].value))
+            subplots.append(self.parse_int(worksheet[f'A{i}'].value))
 
             i = i + 1
 

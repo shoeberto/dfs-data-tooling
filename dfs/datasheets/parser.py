@@ -38,7 +38,7 @@ class DatasheetParser(ABC):
         # this excludes Witness Trees, as they were not present in older datasheets
         for t in [datasheet.TAB_NAME_GENERAL, datasheet.TAB_NAME_NOTES, datasheet.TAB_NAME_TREE_TABLE, datasheet.TAB_NAME_COVER_TABLE, datasheet.TAB_NAME_SAPLING, datasheet.TAB_NAME_SEEDLING]:
             if t not in workbook:
-                raise Exception("Missing required worksheet '{}' in file '{}'".format(t, filepath))
+                raise Exception(f"Missing required worksheet '{t}' in file '{filepath}'")
 
 
     @abstractmethod

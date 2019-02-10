@@ -22,13 +22,13 @@ class SuperplotDatasheetParser2016(DatasheetParser2016):
 
         for rownumber in range(8, 19):
             subplot = datatabs.general.PlotGeneralTabSubplot()
-            subplot.micro_plot_id = self.parse_int(worksheet['A{}'.format(rownumber)].value)
+            subplot.micro_plot_id = self.parse_int(worksheet[f'A{rownumber}'].value)
 
             # Ignore slope
             subplot.latitude = self.parse_float(worksheet[f'L{rownumber}'].value)
             subplot.longitude = self.parse_float(worksheet[f'M{rownumber}'].value)
 
-            subplot.forested = str(worksheet['D{}'.format(rownumber)].value).title().strip()
+            subplot.forested = str(worksheet[f'D{rownumber}'].value).title().strip()
 
             if None == subplot.forested:
                 if subplot.micro_plot_id in collected_cover_subplots or (None != subplot.latitude or None != subplot.longitude):

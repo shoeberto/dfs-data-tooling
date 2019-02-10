@@ -110,7 +110,7 @@ class Validatable(ABC):
         elif scale == 3:
             return 300
 
-        raise Exception('{} is not a valid scale'.format(scale))
+        raise Exception(f'{scale} is not a valid scale')
 
 
     def override_species(self, species):
@@ -120,7 +120,7 @@ class Validatable(ABC):
         try:
             species = species.lower().strip()
         except Exception:
-            raise Exception("Cannot parse species code '{}'".format(species))
+            raise Exception(f"Cannot parse species code '{species}'")
 
         if species in Validatable.SPECIES_OVERRIDES:
             return Validatable.SPECIES_OVERRIDES[species]
@@ -232,7 +232,7 @@ class FieldValidationError(ValidationError):
 
 
     def get_message(self):
-        return "In {}: Expected value of field '{}' is '{}', got '{}'".format(self.object_type, self.field, self.expected, self.actual)
+        return f"In {self.object_type}: Expected value of field '{self.field}' is '{self.expected}', got '{self.actual}'"
 
 
 class FieldCountValidationError(ValidationError):
@@ -244,7 +244,7 @@ class FieldCountValidationError(ValidationError):
 
 
     def get_message(self):
-        return "In {}: Expected count of field '{}' to be {}, instead counted {}".format(self.object_type, self.field, self.expected, self.actual)
+        return f"In {self.object_type}: Expected count of field '{self.field}' to be {self.expected}, instead counted {self.actual}"
 
 
 class DuplicateRowValidationError(ValidationError):
@@ -254,7 +254,7 @@ class DuplicateRowValidationError(ValidationError):
 
 
     def get_message(self):
-        return "In {}: Field values '{}' should be unique, but appears multiple times".format(self.tab, self.combination)
+        return f"In {self.tab}: Field values '{self.combination}' should be unique, but appears multiple times"
 
 
 class RequiredFieldMismatchValidationError(ValidationError):
@@ -284,7 +284,7 @@ class SpeciesValidationError(ValidationError):
 
 
     def get_message(self):
-        return "In {}: '{}' is not a valid species".format(self.object_type, self.species)
+        return f"In {self.object_type}: '{self.species}' is not a valid species"
 
 
 class InvalidDataTypeError(ValidationError):
@@ -296,7 +296,7 @@ class InvalidDataTypeError(ValidationError):
 
 
     def get_message(self):
-        return "In {}: Field '{}' should be of type '{}', instead is '{}'".format(self.object_type, self.field, self.expected_type, self.actual_type)
+        return f"In {self.object_type}: Field '{self.field}' should be of type '{self.expected_type}', instead is '{self.actual_type}'"
 
 
 class UnidentifiedUnknownError(ValidationError):
@@ -306,7 +306,7 @@ class UnidentifiedUnknownError(ValidationError):
 
 
     def get_message(self):
-        return "In {}: Unidentified unknown species labeled as '{}'".format(self.object_type, self.unknown_name)
+        return f"In {self.object_type}: Unidentified unknown species labeled as '{self.unknown_name}'"
 
 
 class FatalExceptionError(ValidationError):
@@ -316,4 +316,4 @@ class FatalExceptionError(ValidationError):
 
     
     def get_message(self):
-        return "Fatal exception thrown in {} with message: {}".format(self.object_type, str(self.exception))
+        return f"Fatal exception thrown in {self.object_type} with message: {str(self.exception)}"
