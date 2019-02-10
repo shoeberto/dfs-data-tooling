@@ -94,7 +94,6 @@ class DatasheetParser2017(DatasheetParser):
 
             live_or_dead = self.parse_int(worksheet[f'F{rownumber}'].value)
 
-            # TODO: this logic is consistent?
             if None != live_or_dead:
                 tree.live_or_dead = 'L' if 1 == live_or_dead else 'D'
 

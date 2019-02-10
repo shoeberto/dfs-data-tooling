@@ -16,7 +16,7 @@ class SeedlingTable(Tab):
 
 
     def postprocess(self):
-        self.check_primary_key_uniquness(self.seedling_species, ['micro_plot_id', 'quarter', 'scale', 'get_species_known', 'get_species_guess'])
+        self.check_primary_key_uniquness(self.seedling_species, ['micro_plot_id', 'quarter', 'scale', 'get_species_known', 'get_species_guess', 'sprout'])
 
 
     def validate(self):

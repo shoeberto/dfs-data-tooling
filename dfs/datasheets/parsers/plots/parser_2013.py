@@ -32,8 +32,6 @@ class DatasheetParser2013(DatasheetParser):
                 subplot.forested = 'No'
             else:
                 pass
-                # TODO convert to error
-                # raise FieldValidationException('PlotGeneralTab', 'forested', '0 or 1', forested_value)
 
             tab.subplots.append(subplot)
 

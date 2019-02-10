@@ -56,13 +56,17 @@ class TreatmentDatasheetWriter(PlotDatasheetWriter):
 
             tab['C{}'.format(rownumber)] = int(subplot.micro_plot_id)
 
-            if None == subplot.collected:
-                if subplot.micro_plot_id in sheet.tabs[datasheet.TAB_NAME_COVER_TABLE].get_recorded_subplots():
-                    subplot.collected = 'Yes'
-                else:
-                    subplot.collected = 'No'
+            override_collected = 'Yes'
 
-            tab['D{}'.format(rownumber)] = subplot.collected
+            if subplot.micro_plot_id in sheet.tabs[datasheet.TAB_NAME_COVER_TABLE].get_recorded_subplots():
+                override_collected = 'Yes'
+            else:
+                override_collected = 'No'
+
+            if override_collected != subplot.collected:
+                print(f'Warning: value of collected at subplot {subplot.micro_plot_id} does not match the actual collection data and will be overridden.')
+
+            tab['D{}'.format(rownumber)] = override_collected
             tab['E{}'.format(rownumber)] = subplot.re_monumented
             tab['F{}'.format(rownumber)] = subplot.forested
             tab['G{}'.format(rownumber)] = subplot.disturbance

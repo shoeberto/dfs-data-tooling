@@ -11,6 +11,8 @@ from dfs.datasheets.datatabs.tabs import Validatable
 def run(data_year, input_directory, output_directory, data_type):
     if 'treatment' == data_type:
         Validatable.MAX_MICRO_PLOT_ID = 15
+    elif 'superplot' == data_type:
+        Validatable.MAX_MICRO_PLOT_ID = 11
 
     p = get_parser(data_type, data_year)
 
@@ -64,7 +66,14 @@ def get_parser(data_type, data_year):
         else:
             raise Exception(f'{data_year} is not a supported data year')
     elif 'superplot' == data_type:
-        raise Exception('unsupported')
+        if 2014 == data_year:
+            p = parsers.superplots.SuperplotDatasheetParser2014()
+        elif 2015 == data_year:
+            p = parsers.superplots.SuperplotDatasheetParser2015()
+        elif 2016 == data_year:
+            p = parsers.superplots.SuperplotDatasheetParser2016()
+        else:
+            raise Exception(f'{data_year} is not a supported data year')
 
     return p
 
@@ -76,6 +85,8 @@ def get_writer(data_type):
         w = writers.plot.PlotDatasheetWriter()
     elif 'treatment' == data_type:
         w = writers.treatment.TreatmentDatasheetWriter()
+    elif 'superplot' == data_type:
+        w = writers.superplot.SuperplotDatasheetWriter()
 
     return w
 

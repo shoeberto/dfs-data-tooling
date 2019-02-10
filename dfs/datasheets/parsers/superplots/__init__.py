@@ -1,0 +1,3 @@
+from dfs.datasheets.parsers.superplots.parser_2014 import SuperplotDatasheetParser2014
+from dfs.datasheets.parsers.superplots.parser_2015 import SuperplotDatasheetParser2015
+from dfs.datasheets.parsers.superplots.parser_2016 import SuperplotDatasheetParser2016

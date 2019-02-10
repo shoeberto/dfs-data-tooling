@@ -76,9 +76,25 @@ class PlotGeneralTab(GeneralTab):
 
         fenced_subplot_condition = None
 
+
+class SuperplotGeneralTab(GeneralTab):
+    def __init__(self):
+        super().__init__()
+
+        self.fenced_subplot_condition = []
+
+    
     def validate(self):
-        # TODO: validation code
-        return super().validate()
+        validations = super().validate()
+
+        try:
+            for subplot_condition in self.fenced_subplot_condition:
+                validations += subplot_condition.validate()
+        except ValueError:
+            pass
+            # swallow
+
+        return validations
 
 
 class GeneralTabSubplot(Validatable):
@@ -175,16 +191,10 @@ class PlotGeneralTabSubplot(GeneralTabSubplot):
         return validation_errors
 
 
-
 class TreatmentPlotGeneralPlotSubplot(GeneralTabSubplot):
     def __init__(self):
         # passthrough
         super().__init__()
-
-
-    def validate(self):
-        # TODO: validation code
-        return super().validate()
 
 
 class FencedSubplotConditions(Validatable):
@@ -212,6 +222,32 @@ class FencedSubplotConditions(Validatable):
 
         return validation_errors
 
+
+class SuperplotFencedSubplotConditions(Validatable):
+    def __init__(self):
+        super().__init__()
+
+        self.repairs = None          # yes/no
+        self.active_exclosure = None          # yes/no
+        self.level = None            # 0-3
+        self.micro_plot_id = None
+        self.notes = None            # text
+
+
+    def validate(self):
+        validation_errors = []
+        validation_errors += self.validate_mutually_required_fields(['micro_plot_id', 'repairs', 'level', 'notes'])
+
+        if None != self.micro_plot_id and self.micro_plot_id not in range(1, Validatable.MAX_MICRO_PLOT_ID + 1):
+            validation_errors.append(FieldValidationError(self.get_object_type(), 'microplot ID', f'1-{Validatable.MAX_MICRO_PLOT_ID}', self.micro_plot_id))
+
+        if None != self.repairs and self.repairs not in self.YES_NO_RESPONSE:
+            validation_errors.append(FieldValidationError(self.get_object_type(), 'repairs', self.YES_NO_TEXT, self.repairs))
+
+        if None != self.level and self.level not in range(0, 4):
+            validation_errors.append(FieldValidationError(self.get_object_type(), 'level', '0-3', self.level))
+
+        return validation_errors
 
 
 class AuxillaryPostLocation(Validatable):
